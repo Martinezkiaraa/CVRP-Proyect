@@ -28,6 +28,9 @@ public:
     // Acceso directo a las rutas
     const std::vector<Ruta>& getRutas() const;
 
+    // Eliminar una ruta
+    void eliminarRuta(constRuta& ruta);
+
 private:
     std::vector<Ruta> rutas;
 };

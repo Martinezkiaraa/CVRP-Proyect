@@ -31,3 +31,7 @@ void Solucion::imprimir() const {
     }
     std::cout << "Costo total solución: " << calcularCostoTotal() << std::endl;
 }
+
+void eliminarRuta(constRuta& ruta){
+    rutas.
+}

@@ -1,0 +1,561 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Trabajo Práctico 2},
+  pdfauthor={Olivia Luchetti y Martina Mariño},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Trabajo Práctico 2}
+\author{Olivia Luchetti y Martina Mariño}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{0264}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Ejercicio 1 - Distribución Uniforme
+(0,18)}\label{ejercicio-1---distribuciuxf3n-uniforme-018}
+
+\subsubsection{Ejercicio 1.a: Función para Generar
+Realizaciones}\label{ejercicio-1.a-funciuxf3n-para-generar-realizaciones}
+
+Creamos una función que devuelva un vector con R realizaciones de una
+variable aleatoria \(X - U(0,18)\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X\_dist }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(R) \{}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{runif}\NormalTok{(}\AttributeTok{n =}\NormalTok{ R, }\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{18}\NormalTok{))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Ejercicio 1.b: Cálculo de Media y Varianza
+Muestral}\label{ejercicio-1.b-cuxe1lculo-de-media-y-varianza-muestral}
+
+Calculamos la media y la varianza muestral para diferentes tamaños de
+muestra R.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{comparacion }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{R =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{), }
+    \AttributeTok{Media\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  ),}
+  \AttributeTok{Varianza\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  )}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(comparacion)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       R Media_muestral Varianza_muestral
+## 1     2      12.783315          43.82488
+## 2    30       8.589811          25.11464
+## 3   100       9.191024          26.50414
+## 4 10000       8.937333          27.00084
+\end{verbatim}
+
+\subsubsection{Ejercicio 1.c: Valores Teóricos y
+Comparación}\label{ejercicio-1.c-valores-teuxf3ricos-y-comparaciuxf3n}
+
+El valor teórico de la esperanza \(E(X)\) y la varianza \(V(X)\) para
+una distribución uniforme \(U(0,18)\) son:
+
+\begin{itemize}
+\item
+  \(E(X) = (a + b) / 2 = (0 + 18) / 2 = 9\)
+\item
+  \(V(X) = (b - a)^2 / 12 = (18 − 0)^2 / 12 = 27\)
+\end{itemize}
+
+\paragraph{Comparación de Valores Teóricos y
+Muestrales:}\label{comparaciuxf3n-de-valores-teuxf3ricos-y-muestrales}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{E\_X }\OtherTok{=} \DecValTok{9}
+\NormalTok{Var\_X }\OtherTok{=} \DecValTok{27}
+
+\NormalTok{R\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{10000}\NormalTok{)}
+
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{4}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{4}\NormalTok{)}
+\NormalTok{abs\_X\_E\_X }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{4}\NormalTok{)}
+\NormalTok{abs\_s2\_VarX }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{4}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) \{}
+\NormalTok{  R }\OtherTok{\textless{}{-}}\NormalTok{ R\_values[i]}
+\NormalTok{  sample\_X }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(R, }\DecValTok{0}\NormalTok{, }\DecValTok{18}\NormalTok{)}
+  
+\NormalTok{  X[i] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(sample\_X)}
+\NormalTok{  s[i] }\OtherTok{\textless{}{-}} \FunctionTok{var}\NormalTok{(sample\_X)}
+\NormalTok{  abs\_X\_E\_X[i] }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(X[i] }\SpecialCharTok{{-}}\NormalTok{ E\_X)}
+\NormalTok{  abs\_s2\_VarX[i] }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(s[i] }\SpecialCharTok{{-}}\NormalTok{ Var\_X)}
+\NormalTok{\}}
+
+\NormalTok{R\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(R\_values, }\StringTok{"∞"}\NormalTok{)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(X, E\_X)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(s, Var\_X)}
+\NormalTok{abs\_X\_E\_X }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(abs\_X\_E\_X, }\DecValTok{0}\NormalTok{)}
+\NormalTok{abs\_s2\_VarX }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(abs\_s2\_VarX, }\DecValTok{0}\NormalTok{)}
+
+\NormalTok{tabla }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{R =}\NormalTok{ R\_values,}
+  \AttributeTok{X\_barra =} \FunctionTok{round}\NormalTok{(X, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{s\_2 =} \FunctionTok{round}\NormalTok{(s, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{abs\_X\_barra\_E\_X =} \FunctionTok{round}\NormalTok{(abs\_X\_E\_X, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{abs\_s\_2\_Var\_X =} \FunctionTok{round}\NormalTok{(abs\_s2\_VarX, }\DecValTok{3}\NormalTok{)}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(tabla)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       R X_barra    s_2 abs_X_barra_E_X abs_s_2_Var_X
+## 1     2  12.310 34.557           3.310         7.557
+## 2    30   8.854 20.261           0.146         6.739
+## 3   100   8.357 24.100           0.643         2.900
+## 4 10000   8.968 27.320           0.032         0.320
+## 5     ∞   9.000 27.000           0.000         0.000
+\end{verbatim}
+
+\paragraph{Conclusión:}\label{conclusiuxf3n}
+
+A medida que el tamaño de la muestra R aumenta, la media y varianza
+muestrales se aproximan progresivamente a los valores teóricos. Esto es
+consistente con la Ley de los Grandes Números, que establece que, a
+medida que aumenta el tamaño de la muestra, las estimaciones muestrales
+tienden a converger hacia los parámetros poblacionales. La Ley de los
+Grandes Númetos asegura que las estimaciones obtenidas de una muestra
+suficientemente grande serán cercanas a los verdaderos valores de la
+población de donde provienen. En el contexto de la tabla, se puede
+observar cómo, para tamaños de muestra pequeños (como R = 2), la
+diferencia entre las estimaciones muestrales y los valores teóricos es
+considerable. Sin embargo, al aumentar R, estas diferencias disminuyen,
+lo que indica que la media y la varianza muestrales están cada vez más
+alineadas con sus valores teóricos. Este comportamiento refleja cómo el
+aumento en el tamaño de la muestra no solo mejora la precisión de las
+estimaciones, sino que también reduce la variabilidad inherente en las
+muestras.
+
+\subsubsection{Ejercicio 1.d: Histogramas de
+X}\label{ejercicio-1.d-histogramas-de-x}
+
+Creamos histogramas para R = 100 y R = 10\^{}4 utilizando 30 bines.
+
+\paragraph{Distribución esperada:}\label{distribuciuxf3n-esperada}
+
+Con una distribución uniforme U(0,18), esperamos que el histograma
+muestre una distribución bastante uniforme, especialmente para tamaños
+de muestra grandes. Con R=100, el histograma debería comenzar a
+parecerse a la distribución uniforme. Para R = 10\^{}4, la distribución
+debería ser aún más uniforme y parecerse a la distribución teórica.
+
+\includegraphics{TP2_files/figure-latex/unnamed-chunk-5-1.pdf}
+\includegraphics{TP2_files/figure-latex/unnamed-chunk-5-2.pdf}
+
+\paragraph{Discusión:}\label{discusiuxf3n}
+
+Al aumentar el tamaño de la muestra, el histograma se acerca más a la
+forma esperada de la distribución uniforme. Para muestras pequeñas, el
+histograma puede mostrar variabilidad significativa debido a la menor
+cantidad de datos. A medida que R aumenta, la variabilidad disminuye y
+el histograma se asemeja más a la distribución uniforme teórica.
+
+\subsection{Ejercicio 2 - Promedio de Quince Valores
+Independientes}\label{ejercicio-2---promedio-de-quince-valores-independientes}
+
+\subsubsection{Ejercicio 2.a: Función para Generar Realizaciones de
+Y}\label{ejercicio-2.a-funciuxf3n-para-generar-realizaciones-de-y}
+
+Creamos una función que devuelva un vector con R realizaciones de Y,
+donde cada Y es el promedio de 15 valores independientes de X.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Y\_dist }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(R) \{}
+  \CommentTok{\# Inicializa un vector numérico de longitud R, donde se almacenarán los promedios}
+  \CommentTok{\#calculados.}
+\NormalTok{  Y }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(R)}
+  \CommentTok{\# Bucle que se repite R veces, una por cada realización de Y.}
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{R) \{}
+    \CommentTok{\# Genera 15 valores independientes de X, donde X sigue una distribución}
+    \CommentTok{\#uniforme entre 0 y 18.}
+\NormalTok{    X\_15 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n =} \DecValTok{15}\NormalTok{, }\AttributeTok{min =} \DecValTok{0}\NormalTok{, }\AttributeTok{max =} \DecValTok{18}\NormalTok{)}
+    \CommentTok{\# Calcula el promedio de los 15 valores generados de X y lo almacena en la }
+    \CommentTok{\#i{-}ésima posición del vector Y.}
+\NormalTok{    Y[i] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(X\_15)}
+\NormalTok{  \}}
+  \CommentTok{\# Devuelve el vector Y, que contiene R promedios de 15 valores independientes de}
+  \CommentTok{\#X.}
+  \FunctionTok{return}\NormalTok{(Y)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Ejercicio 2.b: Cálculo de Media y Varianza
+Muestral}\label{ejercicio-2.b-cuxe1lculo-de-media-y-varianza-muestral}
+
+Calculamos la media y varianza muestral para diferentes tamaños de
+muestra R.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{comparacion }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{R =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{), }
+    \AttributeTok{Media\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  ),}
+  \AttributeTok{Varianza\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{Y\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  )}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(comparacion)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       R Media_muestral Varianza_muestral
+## 1     2       9.457222       0.001930543
+## 2    30       8.852968       1.886629933
+## 3   100       9.268562       1.521618640
+## 4 10000       8.998140       1.850213107
+\end{verbatim}
+
+\subsubsection{Ejercicio 2.c: Comparación de Medias
+Empíricas}\label{ejercicio-2.c-comparaciuxf3n-de-medias-empuxedricas}
+
+Dado que \(E(Y)\) = \(E(X)\), el valor teórico de la esperanza \(E(Y)\)
+y la varianza \(V(Y)\) son:
+
+\begin{itemize}
+\item
+  \(E(Y) = E(X) = 9\)
+\item
+  \(V(Y) = [(b - a)^2 / 12] / n = V(X)/n = V(X)/15 = 27/15 = 1.8\)
+\end{itemize}
+
+\paragraph{Media Esperada y Varianza para
+Y:}\label{media-esperada-y-varianza-para-y}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{E\_Y\_teorico }\OtherTok{\textless{}{-}} \DecValTok{9}
+\NormalTok{V\_Y\_teorico }\OtherTok{\textless{}{-}} \DecValTok{27} \SpecialCharTok{/} \DecValTok{15}
+
+\NormalTok{comparacion }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{R =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{), }
+    \AttributeTok{Media\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{mean}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  ),}
+  \AttributeTok{Varianza\_muestral =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{2}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{30}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{100}\NormalTok{)),}
+    \FunctionTok{var}\NormalTok{(}\FunctionTok{X\_dist}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{))}
+\NormalTok{  ),}
+  \AttributeTok{Media\_teorica =}\NormalTok{ E\_Y\_teorico,}
+  \AttributeTok{Varianza\_teorica =}\NormalTok{ V\_Y\_teorico}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(comparacion)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       R Media_muestral Varianza_muestral Media_teorica Varianza_teorica
+## 1     2      10.941158          4.175705             9              1.8
+## 2    30       7.774725         21.974596             9              1.8
+## 3   100       8.641142         27.634614             9              1.8
+## 4 10000       9.011387         27.073208             9              1.8
+\end{verbatim}
+
+\paragraph{Discusión:}\label{discusiuxf3n-1}
+
+Las medias empíricas de Y deberían acercarse más al valor esperado
+\(E(Y)=9\) comparado con las medias empíricas de X, ya que Y es un
+promedio de varias observaciones de X. La Ley de los Grandes Números
+garantiza que a medida que el tamaño de la muestra aumenta, la media
+empírica se aproxima más al valor esperado de la distribución. Esta ley
+asegura que el promedio de una gran cantidad de observaciones será más
+preciso en reflejar la media teórica. La varianza de Y debería ser más
+pequeña que la varianza de X debido al promedio de múltiples
+observaciones.
+
+\subsubsection{Ejercicio 2.d: Histogramas de
+Y}\label{ejercicio-2.d-histogramas-de-y}
+
+Creamos histogramas para R = 100 y R = 10\^{}4 utilizando 30 bines.
+
+\paragraph{Distribución esperada:}\label{distribuciuxf3n-esperada-1}
+
+Esperaría ver una distribución normal con media \(E(Y) = 9\) y varianza
+\(V(Y) = 27/15\), especialmente para tamaños grandes de muestra. Con
+R=100, el histograma debería comenzar a parecerse a una distribución
+normal, y para R = 10\^{}4, la aproximación debería ser aún mejor.
+
+\includegraphics{TP2_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\paragraph{Discusión:}\label{discusiuxf3n-2}
+
+\begin{itemize}
+\tightlist
+\item
+  Para R=100: Es posible que la distribución de Y aún no se parezca
+  completamente a una distribución normal, pero debería comenzar a
+  mostrar una forma más aproximada a una campana en comparación con una
+  distribución uniforme.
+\item
+  Para R=10\^{}4: Con un tamaño de muestra grande, la distribución de Y
+  debería aproximarse más a una normal con media 9 y varianza 27/15.
+  Esto es consistente con el Teorema Central del Límite, que establece
+  que la media de muestras grandes de una variable aleatoria se
+  distribuye aproximadamente normalmente, independientemente de la
+  distribución original de la variable.
+\end{itemize}
+
+Efecto de variar R: A medida que aumenta R, la distribución de Y se
+aproxima más a una normal con la media y varianza teóricas. Con un
+tamaño de muestra pequeño, el histograma puede mostrar más variabilidad
+y desviarse más de la distribución normal teórica.
+
+\subsection{Ejercicio 3 - Teorema Central del
+Límite}\label{ejercicio-3---teorema-central-del-luxedmite}
+
+\subsubsection{Ejercicio 3.a: Histogramas de
+X}\label{ejercicio-3.a-histogramas-de-x}
+
+\includegraphics{TP2_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\subsubsection{Ejercicio 3.b:
+Histogramas}\label{ejercicio-3.b-histogramas}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X\_dist }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(R, N)\{}
+\NormalTok{  Y }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(R)}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{R)\{}
+\NormalTok{    X\_15 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(N, }\DecValTok{0}\NormalTok{, }\DecValTok{18}\NormalTok{)}
+\NormalTok{    mX\_15 }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(X\_15)}
+\NormalTok{    Y[i] }\OtherTok{\textless{}{-}}\NormalTok{ mX\_15}
+\NormalTok{  \}}
+  \FunctionTok{return}\NormalTok{(Y)}
+\NormalTok{\}}
+
+\NormalTok{color\_vec }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#689C6E"}\NormalTok{,}\StringTok{"\#73AD9C"}\NormalTok{,}\StringTok{"\#6F8AA6"}\NormalTok{,}\StringTok{"\#D2691E"}\NormalTok{)}
+
+\NormalTok{R\_vec }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{6}\NormalTok{)}
+\NormalTok{N\_vec }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{15}\NormalTok{)}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+    \AttributeTok{oma =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+    \AttributeTok{cex.main =} \FloatTok{1.0}\NormalTok{,}
+    \AttributeTok{cex.lab =} \FloatTok{1.2}\NormalTok{,}
+    \AttributeTok{cex.axis =} \FloatTok{1.1}\NormalTok{,}
+    \AttributeTok{las =} \DecValTok{1}\NormalTok{,}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+
+\ControlFlowTok{for}\NormalTok{ (irow }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) \{}
+\NormalTok{  color }\OtherTok{\textless{}{-}}\NormalTok{ color\_vec[irow]}
+\NormalTok{  N }\OtherTok{\textless{}{-}}\NormalTok{ N\_vec[irow]}
+  \ControlFlowTok{for}\NormalTok{ (icol }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{) \{}
+\NormalTok{    R }\OtherTok{\textless{}{-}}\NormalTok{ R\_vec[icol]}
+\NormalTok{    X }\OtherTok{\textless{}{-}} \FunctionTok{X\_dist}\NormalTok{(}\AttributeTok{R=}\NormalTok{R, }\AttributeTok{N =}\NormalTok{ N)}
+    \FunctionTok{hist}\NormalTok{(X, }\AttributeTok{col =}\NormalTok{ color,}
+         \AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{"R ="}\NormalTok{, R), }\AttributeTok{freq =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{TP2_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\paragraph{Discusión:}\label{discusiuxf3n-3}
+
+\begin{itemize}
+\tightlist
+\item
+  Cambios al variar \(n\): a medida que \(n\) aumenta, la forma de la
+  distribución de las muestras se va acercando más a una distribución
+  normal. Esto es consistente con el Teorema Central del Límite, que
+  establece que la suma de un número suficiente de variables aleatorias
+  independientes e idénticamente distribuidas tenderá hacia una
+  distribución normal, independientemente de la distribución original de
+  las variables.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Para \(n = 1\), la distribución sigue siendo uniforme, ya que cada
+    muestra es una realización directa de \(X\).
+  \item
+    A medida que aumentas \(n\), la dispersión de los datos disminuye a
+    medida que \(n\) aumenta. Esto se debe a que la media de un mayor
+    número de muestras es menos variable que la media de un número menor
+    de muestras.
+  \end{itemize}
+\item
+  Cambios al variar \(R\):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Para \(R = 10^2\), los histogramas muestran más variabilidad debido
+    a que se toman menos muestras, lo que introduce más ruido en la
+    estimación de la densidad.
+  \item
+    Para \(R = 10^6\), la distribución estimada se aproxima mejor a la
+    forma teórica de la distribución, ya que un mayor número de
+    repeticiones reduce la variabilidad en la estimación.
+  \end{itemize}
+\end{itemize}
+
+En resumen:
+
+\begin{itemize}
+\tightlist
+\item
+  Al variar \(n\): Se observa una transición de una distribución
+  uniforme hacia una distribución normal al aumentar \(n\). Este cambio
+  ilustra la aplicación del Teorema Central del Límite, donde la suma (o
+  promedio) de un número creciente de variables aleatorias idénticamente
+  distribuidas tiende a una distribución normal.
+\item
+  Al variar \(R\): La forma general de los histogramas no cambia
+  significativamente con \(R\); lo que cambia es la precisión con la que
+  esa forma se estima. Con un \(R\) mayor, se obtiene una mejor
+  aproximación de la forma verdadera de la distribución subyacente.
+  \(R\) no cambia la naturaleza de la distribución, solo mejora la
+  precisión con la que se representa.
+\end{itemize}
+
+\end{document}

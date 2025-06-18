@@ -36,7 +36,9 @@ Solucion ClarkeWrightSolver::inicializarSolucion() {
         r.nodos = {depot, i, depot};
         r.demanda_total = demandas[i];
         r.costo_total = dist[depot][i] + dist[i][depot];
+        int index_ruta = sol.rutas.size();
         sol.agregarRuta(r);
+        sol.ids[i] = index_ruta;
     }
     return sol;
 }
@@ -45,7 +47,18 @@ Solucion ClarkeWrightSolver::construirSolucion() {
     Solucion solucion = inicializarSolucion();
     calcularAhorros();
 
-    // 🔧 TODO: Implementar la lógica de fusión de rutas acá
+    for(const auto& ahorro : lista_ahorros){
+        int id_r1 = solucion.conseguirId(ahorro.i); // En que id de ruta esta el primero nodo del ahorro
+        Ruta& r1 = solucion.rutas[id_r1];
+
+        int id_r2 = solucion.conseguirId(ahorro.j); 
+        Ruta& r2 = solucion.rutas[id_r2];
+
+
+
+
+
+    }
 
     return solucion;
 }

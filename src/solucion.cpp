@@ -4,6 +4,19 @@ void Solucion::agregarRuta(const Ruta& ruta) {
     rutas.push_back(ruta);
 }
 
+void Solucion::actualizarId(int id_ruta_origen, int id_ruta_destino) {
+    const auto& nodos_origen = rutas[id_ruta_origen].nodos;
+    for (int k = 1; k < (int)nodos_origen.size() - 1; ++k) {
+        int cliente = nodos_origen[k];
+        ids[cliente] = id_ruta_destino;
+    }
+}
+
+
+int Solucion::conseguirId(int cliente) const{
+    return ids[cliente];
+}
+
 double Solucion::calcularCostoTotal() const {
     double total = 0.0;
     for (const auto& r : rutas) {

@@ -16,6 +16,12 @@ public:
     // Agrega una ruta
     void agregarRuta(const Ruta& ruta);
 
+    //Actualizar indice
+    void actualizarId(const Ruta& ruta);
+
+    // Devolver indice
+    int conseguirId(const int cliente) const;
+
     // Calcula el costo total de toda la solución
     double calcularCostoTotal() const;
 
@@ -30,6 +36,8 @@ public:
 
 private:
     std::vector<Ruta> rutas;
+    std::vector<int> ids;
+
 };
 
 #endif

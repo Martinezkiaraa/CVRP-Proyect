@@ -12,6 +12,7 @@ public:
 private:
     const VRPLIBReader& reader;
     std::vector<bool> visitado;
+    Solution inicializarSolucion();
 };
 
 #endif

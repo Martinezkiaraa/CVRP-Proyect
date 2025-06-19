@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <limits>
 
-ClarkeWrightSolver::ClarkeWrightSolver(const VRPLIBReader& reader)
-    : reader(reader) {}
+ClarkeWrightSolver::ClarkeWrightSolver(const VRPLIBReader& reader) : reader(reader) {}
 
 void ClarkeWrightSolver::calcularAhorros() {
     const auto& dist = reader.getDistanceMatrix();
@@ -26,29 +25,11 @@ void ClarkeWrightSolver::calcularAhorros() {
         }
     }
 
-    std::sort(lista_ahorros.begin(), lista_ahorros.end(),
-              [](const Ahorro& a, const Ahorro& b) {
+    std::sort(lista_ahorros.begin(), lista_ahorros.end(), [](const Ahorro& a, const Ahorro& b) {
                   return a.valor > b.valor;
               });
 }
 
-//ESTO NO NOS SIRVE
-Solucion ClarkeWrightSolver::inicializarSolucion() {
-    Solucion sol;
-    const auto& demandas = reader.getDemands();
-    const auto& dist = reader.getDistanceMatrix();
-    int depot = reader.getDepotId();
-    int n = reader.getNodes().size();
-
-    for (int i = 1; i < n; ++i) { //Creamos la ruta del deposito a cada cliente
-        Ruta r;
-        r.nodos = {depot, i, depot};
-        r.demanda_total = demandas[i];
-        r.costo_total = 2 * dist[depot][i];
-        sol.agregarRuta(r);
-    }
-    return sol;
-}
 
 Solucion ClarkeWrightSolver::construirSolucion() {
     Solucion solucion = inicializarSolucion();
@@ -56,42 +37,75 @@ Solucion ClarkeWrightSolver::construirSolucion() {
     const auto& dist = reader.getDistanceMatrix();
     int depot = reader.getDepotId();
     int n = reader.getNodes().size();
-    vector<int> visitados(n, 0);
+    int capacidad = reader.getCapacity();
 
-    for (const auto& ahorros : lista_ahorros) { // Para cada ahorro en la lista
-        if (ahorros.valor > 0 && visitados[ahorros.i] == 0 && visitados[ahorros.j] == 0) {
-            // Crear nueva ruta mergeada
-            Ruta new_route;
-            new_route.nodos = {depot, ahorros.i, ahorros.j, depot};
-            new_route.demanda_total = demandas[ahorros.i] + demandas[ahorros.j];
-            new_route.costo_total = dist[depot][ahorros.i] + dist[ahorros.i][ahorros.j] + dist[ahorros.j][depot];
+    std::vector<int> visitados(n, 0);
 
-            visitados[ahorros.i] = 1;
-            visitados[ahorros.j] = 1;
+    calcularAhorros();
 
-            solucion.agregarRuta(new_route);
-        } else if (ahorros.valor > 0 && visitados[ahorros.i] == 1 && visitados[ahorros.j] == 0) {
-            // Extender ruta existente para incluir ahorros.j
+    for (const auto& ahorros : lista_ahorros) {
+        if (ahorros.valor <= 0) continue;
+
+        int i = ahorros.i;
+        int j = ahorros.j;
+
+        // Ambos nodos no asignados → crear nueva ruta
+        if (visitados[i] == 0 && visitados[j] == 0) {
+            int demanda = demandas[i] + demandas[j];
+            if (demanda <= capacidad) {
+                Ruta nueva;
+                nueva.nodos = {depot, i, j, depot};
+                nueva.demanda_total = demanda;
+                nueva.costo_total = dist[depot][i] + dist[i][j] + dist[j][depot];
+                solucion.agregarRuta(nueva);
+                visitados[i] = 1;
+                visitados[j] = 1;
+            }
+        }
+
+        // i asignado, j no asignado → agregar j al final de la ruta de i
+        else if (visitados[i] == 1 && visitados[j] == 0) {
             for (auto& ruta : solucion.getRutas()) {
-                if (ruta.nodos[1] == ahorros.i) {
-                    ruta.nodos.insert(ruta.nodos.end() - 1, ahorros.j);
-                    ruta.demanda_total += demandas[ahorros.j];
-                    ruta.costo_total += dist[ruta.nodos[ruta.nodos.size() - 3]][ahorros.j] + dist[ahorros.j][depot];
-                    visitados[ahorros.j] = 1;
-                    break;
+                int ultimo = ruta.nodos[ruta.nodos.size() - 2];
+                if (ultimo == i) {
+                    int nueva_demanda = ruta.demanda_total + demandas[j];
+                    if (nueva_demanda <= capacidad) {
+                        ruta.nodos.insert(ruta.nodos.end() - 1, j);
+                        ruta.demanda_total = nueva_demanda;
+                        ruta.costo_total += dist[i][j] + dist[j][depot] - dist[i][depot];
+                        visitados[j] = 1;
+                        break;
+                    }
                 }
             }
         } else if (ahorros.valor > 0 && visitados[ahorros.i] == 0 && visitados[ahorros.j] == 1) {
             // Extender ruta existente para incluir ahorros.i
             for (auto& ruta : solucion.getRutas()) {
-                if (ruta.nodos[1] == ahorros.j) {
-                    ruta.nodos.insert(ruta.nodos.begin() + 1, ahorros.i);
-                    ruta.demanda_total += demandas[ahorros.i];
-                    ruta.costo_total += dist[depot][ahorros.i] + dist[ahorros.i][ruta.nodos[2]];
-                    visitados[ahorros.i] = 1;
-                    break;
+                int primero = ruta.nodos[1];
+                if (primero == j) {
+                    int nueva_demanda = ruta.demanda_total + demandas[i];
+                    if (nueva_demanda <= capacidad) {
+                        ruta.nodos.insert(ruta.nodos.begin() + 1, i);
+                        ruta.demanda_total = nueva_demanda;
+                        ruta.costo_total += dist[depot][i] + dist[i][j] - dist[depot][j];
+                        visitados[i] = 1;
+                        break;
+                    }
                 }
             }
+        }
+
+        // Si no entra en ningún caso válido, no hacemos nada
+    }
+
+    // Asignar rutas triviales a clientes sueltos
+    for (int cliente = 1; cliente < n; ++cliente) {
+        if (visitados[cliente] == 0) {
+            Ruta r;
+            r.nodos = {depot, cliente, depot};
+            r.demanda_total = demandas[cliente];
+            r.costo_total = dist[depot][cliente] + dist[cliente][depot];
+            solucion.agregarRuta(r);
         }
     }
 

@@ -44,30 +44,92 @@ Solucion ClarkeWrightSolver::inicializarSolucion() {
 }
 
 Solucion ClarkeWrightSolver::construirSolucion() {
-    Solucion solucion = inicializarSolucion();
-    calcularAhorros();
+    Solucion solucion;
+    const auto& demandas = reader.getDemands();
+    const auto& dist = reader.getDistanceMatrix();
+    int depot = reader.getDepotId();
+    int n = reader.getNodes().size();
+    int capacidad = reader.getCapacity();
 
-    for(const auto& ahorro : lista_ahorros){
-        int id_r1 = solucion.conseguirId(ahorro.i); // En que id de ruta esta el primero nodo del ahorro
-        int id_r2 = solucion.conseguirId(ahorro.j); 
+    std::vector<int> visitados(n, 0);
 
-        // Chequear si estan en la misma ruta
-        if (id_r1 == id_r2) continue; // Pasa a la siguienet iteracion pq no se puede fusionar
+    for (const auto& ahorros : lista_ahorros) {
+        if (ahorros.valor <= 0) continue;
 
-        Ruta& r1 = solucion.rutas[id_r1];
-        Ruta& r2 = solucion.rutas[id_r2];
+        int i = ahorros.i;
+        int j = ahorros.j;
 
-        // Chequear si i está al final de r1 y j al inicio de r2
+        // Ambos nodos no asignados → crear nueva ruta
+        if (visitados[i] == 0 && visitados[j] == 0) {
+            int demanda = demandas[i] + demandas[j];
+            if (demanda <= capacidad) {
+                Ruta nueva;
+                nueva.nodos = {depot, i, j, depot};
+                nueva.demanda_total = demanda;
+                nueva.costo_total = dist[depot][i] + dist[i][j] + dist[j][depot];
 
-        // Verificar que la suma de demandas no se pase de la capacidad
-        int demanda_total = r1.demanda_total + r2.demanda_total;
-        if (demanda_total > reader.getCapacity()) continue;
+                solucion.agregarRuta(nueva);
+                visitados[i] = 1;
+                visitados[j] = 1;
 
-        // FUSIONAR RUTAS -> eliminar una ruta, actualizar costo, y actualizar ids
+                std::cout << "Ruta creada: " << depot << " → " << i << " → " << j << " → " << depot << std::endl;
+            }
+        }
 
+        // i asignado, j no asignado → agregar j al final de la ruta de i
+        else if (visitados[i] == 1 && visitados[j] == 0) {
+            for (auto& ruta : solucion.getRutas()) {
+                int ultimo = ruta.nodos[ruta.nodos.size() - 2];
+                if (ultimo == i) {
+                    int nueva_demanda = ruta.demanda_total + demandas[j];
+                    if (nueva_demanda <= capacidad) {
+                        ruta.nodos.insert(ruta.nodos.end() - 1, j);
+                        ruta.demanda_total = nueva_demanda;
+                        ruta.costo_total += dist[i][j] + dist[j][depot] - dist[i][depot];
+                        visitados[j] = 1;
 
+                        std::cout << "Extendida ruta al final con " << j << std::endl;
+                        break;
+                    }
+                }
+            }
+        }
 
+        // i no asignado, j asignado → agregar i al inicio de la ruta de j
+        else if (visitados[i] == 0 && visitados[j] == 1) {
+            for (auto& ruta : solucion.getRutas()) {
+                int primero = ruta.nodos[1];
+                if (primero == j) {
+                    int nueva_demanda = ruta.demanda_total + demandas[i];
+                    if (nueva_demanda <= capacidad) {
+                        ruta.nodos.insert(ruta.nodos.begin() + 1, i);
+                        ruta.demanda_total = nueva_demanda;
+                        ruta.costo_total += dist[depot][i] + dist[i][j] - dist[depot][j];
+                        visitados[i] = 1;
+
+                        std::cout << "Extendida ruta al inicio con " << i << std::endl;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Si no entra en ningún caso válido, no hacemos nada
+    }
+
+    // Asignar rutas triviales a clientes sueltos
+    for (int cliente = 1; cliente < n; ++cliente) {
+        if (visitados[cliente] == 0) {
+            Ruta r;
+            r.nodos = {depot, cliente, depot};
+            r.demanda_total = demandas[cliente];
+            r.costo_total = dist[depot][cliente] + dist[cliente][depot];
+            solucion.agregarRuta(r);
+
+            std::cout << "Ruta trivial creada para cliente " << cliente << std::endl;
+        }
     }
 
     return solucion;
 }
+

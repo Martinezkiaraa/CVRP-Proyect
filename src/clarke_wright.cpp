@@ -32,6 +32,7 @@ void ClarkeWrightSolver::calcularAhorros() {
               });
 }
 
+//ESTO NO NOS SIRVE
 Solucion ClarkeWrightSolver::inicializarSolucion() {
     Solucion sol;
     const auto& demandas = reader.getDemands();
@@ -51,34 +52,48 @@ Solucion ClarkeWrightSolver::inicializarSolucion() {
 
 Solucion ClarkeWrightSolver::construirSolucion() {
     Solucion solucion = inicializarSolucion();
-    vector <int> visitados(n, 0);
-    for(auto& ahorros: lista_ahorros){ //Para cada ahorro en la lista, creamos una nueva ruta mergeada
+    const auto& demandas = reader.getDemands();
+    const auto& dist = reader.getDistanceMatrix();
+    int depot = reader.getDepotId();
+    int n = reader.getNodes().size();
+    vector<int> visitados(n, 0);
 
-        //VERIFICAR SI ES POSIBLE MERGEAR ESA RUTA
-        if( ahorro[2] != 0 && visitados[ahorro[0]] != 1 && visitados[ahorro[1]] != 1){
-
+    for (const auto& ahorros : lista_ahorros) { // Para cada ahorro en la lista
+        if (ahorros.valor > 0 && visitados[ahorros.i] == 0 && visitados[ahorros.j] == 0) {
+            // Crear nueva ruta mergeada
             Ruta new_route;
-            new_route.nodos = {depot, ahorros[0], ahorros[1], depot};
-            
-            new_route.demanta_total = demandas[ahorro[0]] + demandas[ahorro[1]];
+            new_route.nodos = {depot, ahorros.i, ahorros.j, depot};
+            new_route.demanda_total = demandas[ahorros.i] + demandas[ahorros.j];
+            new_route.costo_total = dist[depot][ahorros.i] + dist[ahorros.i][ahorros.j] + dist[ahorros.j][depot];
 
-            new_route.costo_total = dist[depot][ahorro[0]] + dist[ahorro[0]][ahorro[1]] + dist[ahorro[1]][depot];
+            visitados[ahorros.i] = 1;
+            visitados[ahorros.j] = 1;
 
-            sol.agregarRuta(new_route);
-
-            
+            solucion.agregarRuta(new_route);
+        } else if (ahorros.valor > 0 && visitados[ahorros.i] == 1 && visitados[ahorros.j] == 0) {
+            // Extender ruta existente para incluir ahorros.j
+            for (auto& ruta : solucion.getRutas()) {
+                if (ruta.nodos[1] == ahorros.i) {
+                    ruta.nodos.insert(ruta.nodos.end() - 1, ahorros.j);
+                    ruta.demanda_total += demandas[ahorros.j];
+                    ruta.costo_total += dist[ruta.nodos[ruta.nodos.size() - 3]][ahorros.j] + dist[ahorros.j][depot];
+                    visitados[ahorros.j] = 1;
+                    break;
+                }
+            }
+        } else if (ahorros.valor > 0 && visitados[ahorros.i] == 0 && visitados[ahorros.j] == 1) {
+            // Extender ruta existente para incluir ahorros.i
+            for (auto& ruta : solucion.getRutas()) {
+                if (ruta.nodos[1] == ahorros.j) {
+                    ruta.nodos.insert(ruta.nodos.begin() + 1, ahorros.i);
+                    ruta.demanda_total += demandas[ahorros.i];
+                    ruta.costo_total += dist[depot][ahorros.i] + dist[ahorros.i][ruta.nodos[2]];
+                    visitados[ahorros.i] = 1;
+                    break;
+                }
+            }
         }
-
-        
-
-        lista_ahorros //sacar este save de lista_ahorros
-
     }
-
-
-    calcularAhorros();
-
-    // 🔧 TODO: Implementar la lógica de fusión de rutas acá
 
     return solucion;
 }

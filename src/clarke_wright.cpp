@@ -2,8 +2,7 @@
 #include <algorithm>
 #include <limits>
 
-ClarkeWrightSolver::ClarkeWrightSolver(const VRPLIBReader& reader)
-    : reader(reader) {}
+ClarkeWrightSolver::ClarkeWrightSolver(const VRPLIBReader& reader) : reader(reader) {}
 
 void ClarkeWrightSolver::calcularAhorros() {
     const auto& dist = reader.getDistanceMatrix();
@@ -18,30 +17,11 @@ void ClarkeWrightSolver::calcularAhorros() {
         }
     }
 
-    std::sort(lista_ahorros.begin(), lista_ahorros.end(),
-              [](const Ahorro& a, const Ahorro& b) {
+    std::sort(lista_ahorros.begin(), lista_ahorros.end(), [](const Ahorro& a, const Ahorro& b) {
                   return a.valor > b.valor;
               });
 }
 
-Solucion ClarkeWrightSolver::inicializarSolucion() {
-    Solucion sol;
-    const auto& demandas = reader.getDemands();
-    const auto& dist = reader.getDistanceMatrix();
-    int depot = reader.getDepotId();
-    int n = reader.getNodes().size();
-
-    for (int i = 1; i < n; ++i) {
-        Ruta r;
-        r.nodos = {depot, i, depot};
-        r.demanda_total = demandas[i];
-        r.costo_total = dist[depot][i] + dist[i][depot];
-        int index_ruta = sol.rutas.size();
-        sol.agregarRuta(r);
-        sol.ids[i] = index_ruta;
-    }
-    return sol;
-}
 
 Solucion ClarkeWrightSolver::construirSolucion() {
     Solucion solucion;
@@ -52,6 +32,8 @@ Solucion ClarkeWrightSolver::construirSolucion() {
     int capacidad = reader.getCapacity();
 
     std::vector<int> visitados(n, 0);
+
+    calcularAhorros();
 
     for (const auto& ahorros : lista_ahorros) {
         if (ahorros.valor <= 0) continue;
@@ -67,12 +49,9 @@ Solucion ClarkeWrightSolver::construirSolucion() {
                 nueva.nodos = {depot, i, j, depot};
                 nueva.demanda_total = demanda;
                 nueva.costo_total = dist[depot][i] + dist[i][j] + dist[j][depot];
-
                 solucion.agregarRuta(nueva);
                 visitados[i] = 1;
                 visitados[j] = 1;
-
-                std::cout << "Ruta creada: " << depot << " → " << i << " → " << j << " → " << depot << std::endl;
             }
         }
 
@@ -87,8 +66,6 @@ Solucion ClarkeWrightSolver::construirSolucion() {
                         ruta.demanda_total = nueva_demanda;
                         ruta.costo_total += dist[i][j] + dist[j][depot] - dist[i][depot];
                         visitados[j] = 1;
-
-                        std::cout << "Extendida ruta al final con " << j << std::endl;
                         break;
                     }
                 }
@@ -106,8 +83,6 @@ Solucion ClarkeWrightSolver::construirSolucion() {
                         ruta.demanda_total = nueva_demanda;
                         ruta.costo_total += dist[depot][i] + dist[i][j] - dist[depot][j];
                         visitados[i] = 1;
-
-                        std::cout << "Extendida ruta al inicio con " << i << std::endl;
                         break;
                     }
                 }
@@ -125,8 +100,6 @@ Solucion ClarkeWrightSolver::construirSolucion() {
             r.demanda_total = demandas[cliente];
             r.costo_total = dist[depot][cliente] + dist[cliente][depot];
             solucion.agregarRuta(r);
-
-            std::cout << "Ruta trivial creada para cliente " << cliente << std::endl;
         }
     }
 

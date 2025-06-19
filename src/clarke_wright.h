@@ -19,9 +19,7 @@ public:
 private:
     const VRPLIBReader& reader;
     std::vector<Ahorro> lista_ahorros;
-
     void calcularAhorros();
-    Solucion inicializarSolucion();
 };
 
 #endif

@@ -49,12 +49,21 @@ Solucion ClarkeWrightSolver::construirSolucion() {
 
     for(const auto& ahorro : lista_ahorros){
         int id_r1 = solucion.conseguirId(ahorro.i); // En que id de ruta esta el primero nodo del ahorro
-        Ruta& r1 = solucion.rutas[id_r1];
-
         int id_r2 = solucion.conseguirId(ahorro.j); 
+
+        // Chequear si estan en la misma ruta
+        if (id_r1 == id_r2) continue; // Pasa a la siguienet iteracion pq no se puede fusionar
+
+        Ruta& r1 = solucion.rutas[id_r1];
         Ruta& r2 = solucion.rutas[id_r2];
 
+        // Chequear si i está al final de r1 y j al inicio de r2
 
+        // Verificar que la suma de demandas no se pase de la capacidad
+        int demanda_total = r1.demanda_total + r2.demanda_total;
+        if (demanda_total > reader.getCapacity()) continue;
+
+        // FUSIONAR RUTAS -> eliminar una ruta, actualizar costo, y actualizar ids
 
 
 

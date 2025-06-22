@@ -1,5 +1,5 @@
 #include "clarke_wright.h"
-#include
+#include "solution.h"
 #include <algorithm>
 #include <limits>
 
@@ -31,8 +31,8 @@ void ClarkeWrightSolver::calcularAhorros() {
 }
 
 
-Solucion ClarkeWrightSolver::construirSolucion() {
-    Solucion solucion = inicializarSolucion();
+Solution ClarkeWrightSolver::construirSolucion() {
+    Solution solucion = inicializarSolucion();
     const auto& demandas = reader.getDemands();
     const auto& dist = reader.getDistanceMatrix();
     int depot = reader.getDepotId();

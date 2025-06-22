@@ -1,18 +1,17 @@
 #include "solution.h"
 
-void Solucion::agregarRuta(const Ruta& ruta) {
+void Solution::agregarRuta(const Ruta& ruta) {
     rutas.push_back(ruta);
+    costo_total += ruta.costo;
+    demanda_total += ruta.demanda_total;
+    num_rutas++;
 }
 
-double Solucion::calcularCostoTotal() const {
-    double total = 0.0;
-    for (const auto& r : rutas) {
-        total += r.costo_total;
-    }
-    return total;
+double Solution::calcularCostoTotal() const {
+    return costo_total;
 }
 
-int Solucion::cantidadRutas() const {
+int Solution::cantidadRutas() const {
     return rutas.size();
 }
 
@@ -20,7 +19,7 @@ const std::vector<Ruta>& Solucion::getRutas() const {
     return rutas;
 }
 
-void Solucion::imprimir() const {
+void Solution::imprimir() const {
     for (size_t i = 0; i < rutas.size(); ++i) {
         const auto& r = rutas[i];
         std::cout << "Ruta " << i + 1 << ": ";
@@ -33,5 +32,11 @@ void Solucion::imprimir() const {
 }
 
 void eliminarRuta(constRuta& ruta){
-    rutas.
+    auto it = find(rutas.begin(), rutas.end(), ruta);
+    if (it != rutas.end()) {
+        costo_total -= ruta.costo;
+        demanda_total -= ruta.demanda_total;
+        num_rutas--;
+        rutas.erase(it);
+    }
 }

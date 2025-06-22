@@ -1,4 +1,5 @@
 #include "nearest_neighbor.h"
+#include "solution.h"
 #include <limits>
 
 NearestNeighborSolver::NearestNeighborSolver(const VRPLIBReader& reader)
@@ -7,8 +8,8 @@ NearestNeighborSolver::NearestNeighborSolver(const VRPLIBReader& reader)
     visitado[reader.getDepotId()] = true;
 }
 
-Solucion NearestNeighborSolver::inicializarSolucion() {
-    Solucion sol;
+Solution NearestNeighborSolver::inicializarSolucion() {
+    Solution sol;
     const auto& demandas = reader.getDemands();
     const auto& dist = reader.getDistanceMatrix();
     int depot = reader.getDepotId();
@@ -26,8 +27,8 @@ Solucion NearestNeighborSolver::inicializarSolucion() {
     return sol;
 }
 
-Solucion NearestNeighborSolver::construirSolucion() {
-    Solucion sol;
+Solution NearestNeighborSolver::construirSolucion() {
+    Solution sol;
     const auto& dist = reader.getDistanceMatrix();
     const auto& demandas = reader.getDemands();
     int Q = reader.getCapacity();

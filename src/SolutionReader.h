@@ -4,18 +4,18 @@
 #include <sstream>
 #include <iostream>
 
-class SolucionReader {
+class SolutionReader {
 public:
-    explicit SolucionReader(const std::string& filePath) {
+    explicit SolutionReader(const std::string& filePath) {
         parseFile(filePath);
     }
 
-    const Solucion& getSolucion() const {
-        return solucion;
+    const Solution& getSolution() const {
+        return solution;
     }
 
 private:
-    Solucion solucion;
+    Solution solution;
 
     void parseFile(const std::string& filePath) {
         std::ifstream file(filePath);

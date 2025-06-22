@@ -37,14 +37,11 @@ public:
     void eliminarRuta(constRuta& ruta);
 
 private:
-    string name;
-    string comment;
-    string type;
     int num_rutas; // RUTAS
     double costo_total; // COSTO
-    vector<Ruta> rutas;
+    double demanda_total; 
     int depot; // DESPOSITO
-    vector<Ruta> rutas;
+    vector<Ruta> rutas; // SOLUCION
 };
 
 #endif

@@ -18,11 +18,12 @@ Solution NearestNeighborSolver::inicializarSolucion() {
     for (int i = 1; i < n; ++i) {
         Ruta r;
         r.id = i-1; // empieza en 0 -> indice del vector
-        r.nodos = {depot, i, depot};
-        r.demanda_total = demandas[i];
-        r.costo_total = dist[depot][i] + dist[i][depot];
+        r.secuencia = {depot, i, depot};
+        r.suma_demanda = demandas[i];
+        r.costo = dist[depot][i] + dist[i][depot];
+        r.num_clientes = 1;
+        r.longitud = r.costo;
         sol.agregarRuta(r);
-        sol.actualizarId(r);
     }
     return sol;
 }
@@ -35,6 +36,7 @@ Solution NearestNeighborSolver::construirSolucion() {
     int depot = reader.getDepotId();
     int total_visitados = 1;
 
-
+    // TODO: Implement nearest neighbor algorithm
+    // For now, return empty solution
     return sol;
 }

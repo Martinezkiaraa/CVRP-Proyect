@@ -118,13 +118,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Costo total: " << sol_cw.calcularCostoTotal() << std::endl;
         std::cout << "Número de rutas: " << sol_cw.cantidadRutas() << std::endl;
         std::cout << "Capacidad del vehículo: " << reader.getCapacity() << std::endl;
-        
-        // Calcular demanda total
-        double demanda_total = 0;
-        for (const auto& client : clients) {
-            demanda_total += client.suma_demanda;
-        }
-        std::cout << "Demanda total: " << demanda_total << std::endl;
+        std::cout << "Demanda total: " << sol_cw.getDemandaTotal() << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

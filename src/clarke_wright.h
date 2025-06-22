@@ -14,7 +14,7 @@ struct Ahorro {
 class ClarkeWrightSolver {
 public:
     explicit ClarkeWrightSolver(const VRPLIBReader& reader); //cambiar, no lo entendemos
-    Solucion construirSolucion();
+    Solution construirSolucion();
 
 private:
     const VRPLIBReader& reader;

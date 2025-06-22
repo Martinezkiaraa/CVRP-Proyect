@@ -1,42 +1,39 @@
+#ifndef SOLUTION_READER_H
+#define SOLUTION_READER_H
+
 #include <string>
 #include <vector>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "solution.h"
 
 class SolutionReader {
 public:
-    explicit SolutionReader(const std::string& filePath) {
-        parseFile(filePath);
-    }
-
-    const Solution& getSolution() const {
-        return solution;
-    }
+    explicit SolutionReader(const std::string& filePath);
+    
+    const Solution& getSolution() const;
+    std::string getName() const;
+    std::string getComment() const;
+    std::string getType() const;
+    int getNumRoutes() const;
+    double getTotalCost() const;
+    int getDepot() const;
 
 private:
     Solution solution;
+    std::string name;
+    std::string comment;
+    std::string type;
+    int num_routes;
+    double total_cost;
+    int depot;
 
-    void parseFile(const std::string& filePath) {
-        std::ifstream file(filePath);
-        if (!file.is_open()) {
-            throw std::runtime_error("No se pudo abrir el archivo: " + filePath);
-        }
-
-        std::string line;
-        while (std::getline(file, line)) {
-            std::istringstream iss(line);
-            Ruta ruta;
-            int nodo;
-            while (iss >> nodo) {
-                ruta.nodos.push_back(nodo);
-            }
-            // Ejemplo: Agregar demanda y costo (puedes ajustar según el formato del archivo)
-            ruta.demanda_total = ruta.nodos.size(); // Ejemplo: demanda como número de nodos
-            ruta.costo_total = ruta.nodos.size() * 10.0; // Ejemplo: costo ficticio
-            solucion.rutas.push_back(ruta);
-        }
-
-        file.close();
-    }
+    void parseFile(const std::string& filePath);
+    void parseHeader(const std::string& line);
+    void parseSolutionSection(std::ifstream& file);
+    void parseDepotSection(std::ifstream& file);
+    Ruta parseRouteLine(const std::string& line);
 };
+
+#endif

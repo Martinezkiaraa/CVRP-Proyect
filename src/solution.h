@@ -18,6 +18,9 @@ struct Ruta {
 
 class Solution {
 public:
+    // Constructor
+    Solution() : costo_total(0.0), demanda_total(0), num_rutas(0) {}
+
     // Agrega una ruta
     void agregarRuta(const Ruta& ruta);
 
@@ -34,7 +37,7 @@ public:
     const std::vector<Ruta>& getRutas() const;
 
     // Eliminar una ruta
-    void eliminarRuta(constRuta& ruta);
+    void eliminarRuta(const Ruta& ruta);
 
 private:
     int num_rutas; // RUTAS

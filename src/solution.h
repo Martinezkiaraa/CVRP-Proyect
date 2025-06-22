@@ -19,7 +19,7 @@ struct Ruta {
 class Solution {
 public:
     // Constructor
-    Solution() : costo_total(0.0), demanda_total(0), num_rutas(0) {}
+    Solution() : num_rutas(0), costo_total(0.0), demanda_total(0), depot(0) {}
 
     // Agrega una ruta
     void agregarRuta(const Ruta& ruta);
@@ -46,6 +46,7 @@ public:
 
     // Getters para valores del header
     double getCostoTotal() const { return costo_total; }
+    double getDemandaTotal() const { return demanda_total; }
     int getNumRutas() const { return num_rutas; }
     int getDepot() const { return depot; }
 

@@ -4,6 +4,7 @@
 #include <cctype>
 #include "VRPLIBReader.h"
 #include "clarke_wright.h"
+#include "nearest_neighbor.h"
 #include "SolutionReader.h"
 
 // Función para comparar dos soluciones
@@ -89,6 +90,46 @@ int main(int argc, char* argv[]) {
         sol_cw.imprimir();
         std::cout << "Costo total: " << sol_cw.calcularCostoTotal() << std::endl;
         std::cout << "Número de rutas: " << sol_cw.cantidadRutas() << std::endl;
+
+        // -------------------------------------
+        // 2.5. HEURÍSTICA CONSTRUCTIVA: Nearest Neighbor
+        // -------------------------------------
+        std::cout << "\n=== NEAREST NEIGHBOR ===" << std::endl;
+        NearestNeighborSolver solver_nn(reader);
+        Solution sol_nn = solver_nn.construirSolucion();
+
+        std::cout << "Solución Nearest Neighbor:" << std::endl;
+        sol_nn.imprimir();
+        std::cout << "Costo total: " << sol_nn.calcularCostoTotal() << std::endl;
+        std::cout << "Número de rutas: " << sol_nn.cantidadRutas() << std::endl;
+
+        // -------------------------------------
+        // 2.6. COMPARACIÓN ENTRE ALGORITMOS
+        // -------------------------------------
+        std::cout << "\n=== COMPARACIÓN ENTRE ALGORITMOS ===" << std::endl;
+        double costo_cw = sol_cw.calcularCostoTotal();
+        double costo_nn = sol_nn.calcularCostoTotal();
+        int rutas_cw = sol_cw.cantidadRutas();
+        int rutas_nn = sol_nn.cantidadRutas();
+
+        std::cout << "Clarke & Wright:  Costo = " << costo_cw << ", Rutas = " << rutas_cw << std::endl;
+        std::cout << "Nearest Neighbor: Costo = " << costo_nn << ", Rutas = " << rutas_nn << std::endl;
+        
+        if (costo_cw < costo_nn) {
+            std::cout << "🏆 Clarke & Wright es mejor en costo por " << (costo_nn - costo_cw) << std::endl;
+        } else if (costo_nn < costo_cw) {
+            std::cout << "🏆 Nearest Neighbor es mejor en costo por " << (costo_cw - costo_nn) << std::endl;
+        } else {
+            std::cout << "🤝 Ambos algoritmos tienen el mismo costo" << std::endl;
+        }
+
+        if (rutas_cw < rutas_nn) {
+            std::cout << "🚛 Clarke & Wright usa menos vehículos (" << rutas_cw << " vs " << rutas_nn << ")" << std::endl;
+        } else if (rutas_nn < rutas_cw) {
+            std::cout << "🚛 Nearest Neighbor usa menos vehículos (" << rutas_nn << " vs " << rutas_cw << ")" << std::endl;
+        } else {
+            std::cout << "🚛 Ambos algoritmos usan el mismo número de vehículos" << std::endl;
+        }
 
         // -------------------------------------
         // 3. COMPARAR CON SOLUCIÓN DE REFERENCIA

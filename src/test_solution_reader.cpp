@@ -4,7 +4,7 @@
 int main() {
     try {
         // Leer una solución de ejemplo
-        SolutionReader reader("../instancias/2l-cvrp-0/soluciones/E045-04F.HRE");
+        SolutionReader reader("instancias/2l-cvrp-0/soluciones/E045-04F.HRE");
         
         std::cout << "=== Informacion de la Solucion ===" << std::endl;
         std::cout << "Nombre: " << reader.getName() << std::endl;

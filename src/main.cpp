@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <cctype>
 #include "VRPLIBReader.h"
 #include "clarke_wright.h"
 #include "SolutionReader.h"
@@ -32,6 +34,25 @@ bool areSolutionsEqual(const Solution& sol1, const Solution& sol2) {
     }
     
     return true;
+}
+
+// Función para convertir el nombre de la instancia al formato de solución
+std::string convertInstanceNameToSolutionName(const std::string& instanceName) {
+    std::string solutionName = instanceName;
+    // Eliminar todos los espacios en blanco
+    solutionName.erase(remove_if(solutionName.begin(), solutionName.end(), ::isspace), solutionName.end());
+
+    // Buscar el punto antes de la extensión
+    size_t dotPos = solutionName.find_last_of('.');
+    std::string namePart = (dotPos != std::string::npos) ? solutionName.substr(0, dotPos) : solutionName;
+    // Buscar la última letra alfabética antes del punto y convertirla a mayúscula
+    for (size_t i = namePart.size(); i-- > 0;) {
+        if (std::isalpha(namePart[i])) {
+            namePart[i] = std::toupper(namePart[i]);
+            break;
+        }
+    }
+    return namePart;
 }
 
 int main(int argc, char* argv[]) {
@@ -76,7 +97,10 @@ int main(int argc, char* argv[]) {
         
         // Construir el path de la solución de referencia
         std::string instance_name = reader.getName();
-        std::string solution_path = "../instancias/2l-cvrp-0/soluciones/" + instance_name + ".HRE";
+        std::string converted_name = convertInstanceNameToSolutionName(instance_name);
+        std::cout << "DEBUG: Nombre original: '" << instance_name << "'" << std::endl;
+        std::cout << "DEBUG: Nombre convertido: '" << converted_name << "'" << std::endl;
+        std::string solution_path = "instancias/2l-cvrp-0/soluciones/" + converted_name + ".HRE";
         
         std::cout << "Buscando solución de referencia en: " << solution_path << std::endl;
         

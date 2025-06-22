@@ -5,10 +5,15 @@
 #include <string>
 #include <iostream>
 
+using namespace std;
+
 struct Ruta {
-    std::vector<int> nodos;         // Secuencia: [depósito, clientes..., depósito]
-    int demanda_total = 0;          // SUMD
-    double costo_total = 0.0;       // COST
+    int id; // Número de la ruta
+    int suma_demanda; // SUMD
+    double costo; // COST
+    double longitud; // LENGTH
+    int num_clientes; // #C
+    std::vector<int> secuencia; // SEQUENCE
 };
 
 class Solution {
@@ -32,7 +37,14 @@ public:
     void eliminarRuta(constRuta& ruta);
 
 private:
-    std::vector<Ruta> rutas;
+    string name;
+    string comment;
+    string type;
+    int num_rutas; // RUTAS
+    double costo_total; // COSTO
+    vector<Ruta> rutas;
+    int depot; // DESPOSITO
+    vector<Ruta> rutas;
 };
 
 #endif

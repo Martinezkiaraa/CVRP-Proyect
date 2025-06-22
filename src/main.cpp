@@ -1,6 +1,16 @@
 #include <iostream>
 #include "VRPLIBReader.h"
 
+// Función para comparar dos instancias de Solucion
+bool areSolutionsEqual(const Solucion& sol1, const Solucion& sol2) {
+    // Compara los atributos relevantes de las soluciones
+    if (sol1.demanda_total != sol2.demanda_total) return false;
+    if (sol1.costo_total != sol2.costo_total) return false;
+    if (sol1.nodos != sol2.nodos) return false; // Compara vectores directamente
+
+    // Si todos los atributos son iguales, las soluciones son iguales
+    return true;
+}
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <path_to_vrp_file>" << std::endl;
@@ -34,7 +44,20 @@ int main(int argc, char* argv[]) {
     // -------------------------------------
     // 2. HEURÍSTICA CONSTRUCTIVA 1: Clarke & Wright
     // -------------------------------------
-    
+    ClarkeWrightSolver solver(reader)
+    Solucion sol = solver.construirSolucion();
+
+    //Pruebo con 045-04f
+    std::cout << "Testeando soluciones para la instancia"<<std::endl;
+    solucion sol1;
+
+     // Prueba de igualdad
+    if (areSolutionsEqual(sol1, sol2)) {
+        std::cout << "Las soluciones son iguales." << std::endl;
+    } else {
+        std::cout << "Las soluciones son diferentes." << std::endl;
+    }
+
 
     // -------------------------------------
     // 3. HEURÍSTICA CONSTRUCTIVA 2: Vecino más cercano

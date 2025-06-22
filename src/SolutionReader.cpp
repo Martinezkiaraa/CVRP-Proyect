@@ -22,15 +22,15 @@ std::string SolutionReader::getType() const {
 }
 
 int SolutionReader::getNumRoutes() const {
-    return num_routes;
+    return solution.getNumRutas();
 }
 
 double SolutionReader::getTotalCost() const {
-    return total_cost;
+    return solution.getCostoTotal();
 }
 
 int SolutionReader::getDepot() const {
-    return depot;
+    return solution.getDepot();
 }
 
 void SolutionReader::parseFile(const std::string& filePath) {
@@ -106,8 +106,10 @@ void SolutionReader::parseHeader(const std::string& line) {
             type = value;
         } else if (key == "ROUTES") {
             iss >> num_routes;
+            solution.setNumRutas(num_routes);
         } else if (key == "COST") {
             iss >> total_cost;
+            solution.setCostoTotal(total_cost);
         }
     }
 }
@@ -137,6 +139,7 @@ void SolutionReader::parseDepotSection(std::ifstream& file) {
     if (std::getline(file, line)) {
         std::istringstream iss(line);
         iss >> depot;
+        solution.setDepot(depot);
     }
 }
 

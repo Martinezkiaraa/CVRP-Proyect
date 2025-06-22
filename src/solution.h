@@ -39,6 +39,16 @@ public:
     // Eliminar una ruta
     void eliminarRuta(const Ruta& ruta);
 
+    // Setters para valores para soluciones ya dadas
+    void setCostoTotal(double costo) { costo_total = costo; }
+    void setNumRutas(int num) { num_rutas = num; }
+    void setDepot(int d) { depot = d; }
+
+    // Getters para valores del header
+    double getCostoTotal() const { return costo_total; }
+    int getNumRutas() const { return num_rutas; }
+    int getDepot() const { return depot; }
+
 private:
     int num_rutas; // RUTAS
     double costo_total; // COSTO

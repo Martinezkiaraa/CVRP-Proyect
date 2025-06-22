@@ -1,8 +1,8 @@
 #ifndef CLARKE_WRIGHT_H
 #define CLARKE_WRIGHT_H
 
-#include "vrplib_reader.h"
-#include "solucion.h"
+#include "VRPLIBReader.h"
+#include "solution.h"
 
 #include <vector>
 

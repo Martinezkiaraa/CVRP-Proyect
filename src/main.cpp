@@ -1,67 +1,135 @@
 #include <iostream>
+#include <string>
 #include "VRPLIBReader.h"
+#include "clarke_wright.h"
+#include "SolutionReader.h"
 
-// Función para comparar dos instancias de Solucion
-bool areSolutionsEqual(const Solucion& sol1, const Solucion& sol2) {
-    // Compara los atributos relevantes de las soluciones
-    if (sol1.demanda_total != sol2.demanda_total) return false;
-    if (sol1.costo_total != sol2.costo_total) return false;
-    if (sol1.nodos != sol2.nodos) return false; // Compara vectores directamente
-
-    // Si todos los atributos son iguales, las soluciones son iguales
+// Función para comparar dos soluciones
+bool areSolutionsEqual(const Solution& sol1, const Solution& sol2) {
+    // Compara el número de rutas
+    if (sol1.cantidadRutas() != sol2.cantidadRutas()) {
+        std::cout << "Diferencia en número de rutas: " << sol1.cantidadRutas() << " vs " << sol2.cantidadRutas() << std::endl;
+        return false;
+    }
+    
+    // Compara el costo total
+    double costo1 = sol1.calcularCostoTotal();
+    double costo2 = sol2.calcularCostoTotal();
+    if (std::abs(costo1 - costo2) > 0.001) {
+        std::cout << "Diferencia en costo total: " << costo1 << " vs " << costo2 << std::endl;
+        return false;
+    }
+    
+    // Compara las rutas individuales
+    const auto& rutas1 = sol1.getRutas();
+    const auto& rutas2 = sol2.getRutas();
+    
+    for (size_t i = 0; i < rutas1.size(); ++i) {
+        if (rutas1[i].secuencia != rutas2[i].secuencia) {
+            std::cout << "Diferencia en ruta " << i + 1 << std::endl;
+            return false;
+        }
+    }
+    
     return true;
 }
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <path_to_vrp_file>" << std::endl;
+        std::cerr << "Example: " << argv[0] << " ../instancias/2l-cvrp-0/E045-04f.dat" << std::endl;
         return 1;
     }
 
-    VRPLIBReader reader(argv[1]);
+    try {
+        // -------------------------------------
+        // 1. CARGAR INSTANCIA
+        // -------------------------------------
+        std::cout << "=== CARGANDO INSTANCIA ===" << std::endl;
+        VRPLIBReader reader(argv[1]);
 
-    std::cout << "Instance Name: " << reader.getName() << std::endl;
-    std::cout << "Dimension: " << reader.getDimension() << std::endl;
-    std::cout << "Number of Vehicles: " << reader.getNumVehicles() << std::endl;
-    std::cout << "Capacity: " << reader.getCapacity() << std::endl;
-    // Notar que el deposito varia y no siempre es 0. getDepotId() nos dice cual es el id del deposito.
-    std::cout << "Depot ID: " << reader.getDepotId() << std::endl;
+        std::cout << "Instance Name: " << reader.getName() << std::endl;
+        std::cout << "Dimension: " << reader.getDimension() << std::endl;
+        std::cout << "Number of Vehicles: " << reader.getNumVehicles() << std::endl;
+        std::cout << "Capacity: " << reader.getCapacity() << std::endl;
+        std::cout << "Depot ID: " << reader.getDepotId() << std::endl;
 
-    std::vector<Node> clients = reader.getNodes();
+        std::vector<Node> clients = reader.getNodes();
+        std::cout << "Number of clients: " << clients.size() << std::endl;
 
-    std::cout << clients.size() << std::endl;
-    
-    // Testeamos la matriz de distancia. Tomando los id de los nodos, indexa desde 1.
-    // Tener en cuenta esto al momento de decidir como representar una solucion.
-    std::cout << "Distance matrix" << std::endl;
-    std::vector<std::vector<double>> dist_matrix = reader.getDistanceMatrix();
-    for (int i = 1; i <= reader.getDimension(); i++) {
-        for (int j = 1; j <= reader.getDimension(); j++) {
-            std::cout << dist_matrix[i][j] << " ";
+        // -------------------------------------
+        // 2. HEURÍSTICA CONSTRUCTIVA: Clarke & Wright
+        // -------------------------------------
+        std::cout << "\n=== CLARKE & WRIGHT ===" << std::endl;
+        ClarkeWrightSolver solver(reader);
+        Solution sol_cw = solver.construirSolucion();
+
+        std::cout << "Solución Clarke & Wright:" << std::endl;
+        sol_cw.imprimir();
+        std::cout << "Costo total: " << sol_cw.calcularCostoTotal() << std::endl;
+        std::cout << "Número de rutas: " << sol_cw.cantidadRutas() << std::endl;
+
+        // -------------------------------------
+        // 3. COMPARAR CON SOLUCIÓN DE REFERENCIA
+        // -------------------------------------
+        std::cout << "\n=== COMPARACIÓN CON SOLUCIÓN DE REFERENCIA ===" << std::endl;
+        
+        // Construir el path de la solución de referencia
+        std::string instance_name = reader.getName();
+        std::string solution_path = "../instancias/2l-cvrp-0/soluciones/" + instance_name + ".HRE";
+        
+        std::cout << "Buscando solución de referencia en: " << solution_path << std::endl;
+        
+        try {
+            SolutionReader solution_reader(solution_path);
+            const Solution& sol_ref = solution_reader.getSolution();
+            
+            std::cout << "Solución de referencia:" << std::endl;
+            sol_ref.imprimir();
+            std::cout << "Costo total referencia: " << sol_ref.calcularCostoTotal() << std::endl;
+            std::cout << "Número de rutas referencia: " << sol_ref.cantidadRutas() << std::endl;
+            
+            // Comparar soluciones
+            std::cout << "\n=== RESULTADO DE LA COMPARACIÓN ===" << std::endl;
+            if (areSolutionsEqual(sol_cw, sol_ref)) {
+                std::cout << "✅ Las soluciones son iguales!" << std::endl;
+            } else {
+                std::cout << "❌ Las soluciones son diferentes." << std::endl;
+                
+                // Mostrar diferencias detalladas
+                std::cout << "\nDiferencias:" << std::endl;
+                std::cout << "Clarke & Wright - Costo: " << sol_cw.calcularCostoTotal() 
+                          << ", Rutas: " << sol_cw.cantidadRutas() << std::endl;
+                std::cout << "Referencia - Costo: " << sol_ref.calcularCostoTotal() 
+                          << ", Rutas: " << sol_ref.cantidadRutas() << std::endl;
+            }
+            
+        } catch (const std::exception& e) {
+            std::cout << "⚠️  No se pudo cargar la solución de referencia: " << e.what() << std::endl;
+            std::cout << "Continuando solo con la solución de Clarke & Wright..." << std::endl;
         }
-        std::cout << std::endl;
+
+        // -------------------------------------
+        // 4. ESTADÍSTICAS FINALES
+        // -------------------------------------
+        std::cout << "\n=== ESTADÍSTICAS FINALES ===" << std::endl;
+        std::cout << "Instancia: " << reader.getName() << std::endl;
+        std::cout << "Algoritmo: Clarke & Wright" << std::endl;
+        std::cout << "Costo total: " << sol_cw.calcularCostoTotal() << std::endl;
+        std::cout << "Número de rutas: " << sol_cw.cantidadRutas() << std::endl;
+        std::cout << "Capacidad del vehículo: " << reader.getCapacity() << std::endl;
+        
+        // Calcular demanda total
+        double demanda_total = 0;
+        for (const auto& client : clients) {
+            demanda_total += client.suma_demanda;
+        }
+        std::cout << "Demanda total: " << demanda_total << std::endl;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
-
-    // -------------------------------------
-    // 2. HEURÍSTICA CONSTRUCTIVA 1: Clarke & Wright
-    // -------------------------------------
-    ClarkeWrightSolver solver(reader)
-    Solucion sol = solver.construirSolucion();
-
-    //Pruebo con 045-04f
-    std::cout << "Testeando soluciones para la instancia"<<std::endl;
-    solucion sol1;
-
-     // Prueba de igualdad
-    if (areSolutionsEqual(sol1, sol2)) {
-        std::cout << "Las soluciones son iguales." << std::endl;
-    } else {
-        std::cout << "Las soluciones son diferentes." << std::endl;
-    }
-
-
-    // -------------------------------------
-    // 3. HEURÍSTICA CONSTRUCTIVA 2: Vecino más cercano
-    // -------------------------------------
 
     return 0;
-}
+} 

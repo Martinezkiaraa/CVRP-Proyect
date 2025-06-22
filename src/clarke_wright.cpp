@@ -10,6 +10,7 @@ void ClarkeWrightSolver::calcularAhorros() {
     int depot = reader.getDepotId();
     int n = reader.getNodes().size();
     int capacity = reader.getCapacity();
+    vector<int>
 
 
     lista_ahorros.clear();

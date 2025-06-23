@@ -71,14 +71,14 @@ Solution NearestNeighborSolver::construirSolucion() {
             }
 
             // Ordenar por distancia y tomar los 5 primeros
-            ssort(candidatos.begin(), candidatos.end());
+            sort(candidatos.begin(), candidatos.end());
             candidatos.resize(std::min(5, (int)candidatos.size()));
 
             // Intentar agregar el mejor candidato que quepa en el vehículo
             bool agregado = false;
             for (const auto& candidato : candidatos) {
                 int nodo = candidato.second;
-                if (demandas[nodo] <= capacidad_actual) {
+                if (demandas[nodo] <= capacidad_remanente) {
                     // Agregar el nodo a la ruta
                     ruta_actual.secuencia.push_back(nodo);
                     
@@ -86,7 +86,7 @@ Solution NearestNeighborSolver::construirSolucion() {
                     ruta_actual.costo += dist[nodo_actual][nodo];
                     
                     // Actualizar capacidad y estado
-                    capacidad_actual -= demandas[nodo];
+                    capacidad_remanente -= demandas[nodo];
                     visitados[nodo] = true;
                     nodo_actual = nodo;
                     total_visitados++;

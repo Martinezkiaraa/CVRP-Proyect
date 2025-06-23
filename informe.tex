@@ -34,21 +34,106 @@
 \newpage
 
 \section{Introducción}
-Aquí se describe el objetivo del trabajo práctico, el problema a resolver y el contexto general.
 
-\section{Diseño}
-Explicación del diseño del algoritmo, incluyendo diagramas, pseudocódigo y decisiones tomadas.
+El Problema de Ruteo de Vehículos con Capacidad (CVRP) es un problema de optimización combinatoria que busca determinar las rutas óptimas para una flota de vehículos de capacidad limitada para servir a un conjunto de clientes desde un depósito central, minimizando el costo total (generalmente la distancia).
 
-\section{Implementación}
-Detalles sobre la implementación del algoritmo, lenguaje utilizado, librerías y herramientas empleadas.
+\subsection{Definición Formal}
+Dado un grafo $G=(V,E)$, donde $V=\{0, ..., n\}$ es el conjunto de nodos (0 es el depósito) y $E$ es el conjunto de aristas. Cada cliente $i \in V \setminus \{0\}$ tiene una demanda $q_i$, y la distancia entre nodos $i$ y $j$ es $d_{ij}$. El objetivo es encontrar un conjunto de rutas de mínimo costo total para una flota de vehículos de capacidad $Q$, tal que cada cliente sea visitado exactamente una vez.
 
-\section{Experimentación}
-Descripción de los experimentos realizados para evaluar el algoritmo, incluyendo parámetros y configuraciones.
+\section{Heurísticas Constructivas Implementadas}
 
-\section{Resultados}
-Presentación de los resultados obtenidos, con gráficos, tablas y análisis.
+\subsection{Algoritmo de Ahorros de Clarke \& Wright}
+Es una de las heurísticas más conocidas. Parte de una solución inicial donde cada cliente es servido individualmente y luego fusiona rutas de forma iterativa si esto genera un "ahorro" en la distancia total.
 
-\section{Conclusión}
-Resumen de los hallazgos, reflexiones finales y posibles mejoras futuras.
+\subsubsection{Concepto de Ahorros}
+El ahorro $s_{ij}$ al conectar los clientes $i$ y $j$ se calcula como: $s_{ij} = d_{0i} + d_{0j} - d_{ij}$. Representa la distancia que se ahorra al no tener que volver al depósito entre las visitas a $i$ y $j$.
+
+\subsubsection{Análisis de Complejidad}
+\begin{itemize}
+    \item \textbf{Cálculo de ahorros:} Se calculan para cada par de nodos, resultando en una complejidad de $O(n^2)$.
+    \item \textbf{Ordenamiento de ahorros:} Ordenar la lista de ahorros tiene una complejidad de $O(n^2 \log n)$.
+    \item \textbf{Construcción de rutas:} El bucle principal itera sobre la lista de ahorros. Con estructuras de datos optimizadas (como un mapa para localizar nodos), las operaciones internas son rápidas. La complejidad total está dominada por el ordenamiento: $O(n^2 \log n)$.
+\end{itemize}
+
+\subsection{Algoritmo del Vecino Más Cercano (Nearest Neighbor)}
+Es una heurística voraz que construye rutas secuencialmente. Desde el último nodo añadido a una ruta, se selecciona el cliente no visitado más cercano que no viole la restricción de capacidad.
+
+\subsubsection{Variante Implementada}
+Nuestra implementación evalúa una lista restringida de los 5 candidatos más cercanos para añadir a la ruta, en lugar de solo el más cercano, para diversificar la construcción.
+
+\subsubsection{Análisis de Complejidad}
+En cada paso de la construcción de una ruta, se busca el vecino más cercano entre los nodos no visitados. En el peor caso, esto se repite para cada uno de los $n$ nodos, resultando en una complejidad de $O(n^2)$.
+
+\section{Operadores de Búsqueda Local (Pendiente)}
+\textit{En esta sección se describirán los operadores de búsqueda local implementados para mejorar las soluciones obtenidas por las heurísticas constructivas.}
+
+\subsection{Operador de Reubicación (Relocation) (Pendiente)}
+\textit{Descripción del operador que mueve un cliente de una ruta a otra.}
+
+\subsection{Operador de Intercambio (Swap) (Pendiente)}
+\textit{Descripción del operador que intercambia dos clientes entre rutas (o en la misma ruta).}
+
+\section{Métodos Híbridos (Pendiente)}
+\textit{En esta sección se propondrá y describirá un método que combine una heurística constructiva con los operadores de búsqueda local para refinar las soluciones iniciales.}
+
+\section{Diseño e Implementación}
+
+\subsection{Lenguaje y Estructura}
+El proyecto fue implementado en C++11, favoreciendo la eficiencia en el manejo de memoria y el rendimiento computacional. Se utilizó un diseño orientado a objetos para modularizar el código y facilitar su mantenimiento.
+
+\subsection{Clases Principales}
+\begin{itemize}
+    \item \textbf{VRPLIBReader}: Responsable de leer y parsear las instancias desde archivos de formato VRPLIB.
+    \item \textbf{Solution}: Modela una solución al problema, conteniendo el conjunto de rutas y sus métricas (costo, etc.).
+    \item \textbf{ClarkeWrightSolver} y \textbf{NearestNeighborSolver}: Implementan las lógicas de las heurísticas constructivas.
+\end{itemize}
+
+\subsection{Casos de Test (Pendiente)}
+\textit{En esta sección se documentarán los casos de test unitarios implementados para al menos dos clases, justificando las pruebas realizadas. Se pueden utilizar herramientas de IA para el diseño de los tests.}
+
+\section{Experimentación y Resultados}
+
+\subsection{Diseño Experimental}
+\begin{itemize}
+    \item \textbf{Instancias:} Se utilizan las instancias de benchmark del directorio `2l-cvrp-0` de VRPLIB.
+    \item \textbf{Métricas:} Se evalúan las soluciones según el costo total (distancia) y el número de vehículos (rutas). También se considera el tiempo de ejecución.
+\end{itemize}
+
+\subsection{Plan de Comparación de Métodos}
+La experimentación comparará el rendimiento de (al menos) los siguientes enfoques:
+\begin{enumerate}
+    \item Cada heurística constructiva de manera independiente (realizado).
+    \item Heurística constructiva + un operador de búsqueda local (pendiente).
+    \item Heurística constructiva + combinación de operadores de búsqueda local (pendiente).
+\end{enumerate}
+
+\subsection{Resultados Preliminares (Heurísticas Constructivas)}
+\begin{itemize}
+    \item Para la instancia \textbf{E045-04f}:
+    \begin{itemize}
+        \item \textbf{Clarke \& Wright:} Costo = 834.34, Rutas = 5.
+        \item \textbf{Nearest Neighbor:} Costo = 1075.33, Rutas = 4.
+        \item \textbf{Referencia:} Costo = 723.54, Rutas = 4.
+    \end{itemize}
+    \item \textbf{Observación:} Clarke \& Wright obtiene un mejor costo, mientras que Nearest Neighbor utiliza un número de vehículos más cercano al óptimo en este caso.
+\end{itemize}
+
+\subsection{Análisis de Resultados Finales (Pendiente)}
+\textit{En esta sección se presentará un análisis exhaustivo de los resultados de todos los métodos propuestos, utilizando tablas y gráficos para comparar su rendimiento en el conjunto de instancias.}
+
+\section{Conclusiones}
+
+\subsection{Hallazgos Preliminares}
+\begin{itemize}
+    \item Las heurísticas constructivas proveen una base sólida, pero sus resultados pueden ser mejorados significativamente.
+    \item Existe un trade-off entre la calidad de la solución (costo) y el número de vehículos utilizados, donde diferentes heurísticas favorecen uno u otro.
+\end{itemize}
+
+\subsection{Posibles Mejoras y Trabajo Futuro}
+\begin{itemize}
+    \item \textbf{Búsqueda Local:} La implementación de operadores de búsqueda local es el siguiente paso crucial.
+    \item \textbf{Randomización y Metaheurísticas:} Para obtener la nota máxima, se podría implementar una estrategia de randomización en las heurísticas constructivas o una metaheurística como Simulated Annealing o Búsqueda Tabú para guiar la búsqueda local.
+    \item \textbf{Paralelización:} Para instancias de gran tamaño, el cálculo de la matriz de ahorros podría ser paralelizado.
+\end{itemize}
 
 \end{document}

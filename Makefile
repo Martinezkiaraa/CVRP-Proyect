@@ -29,6 +29,7 @@ HEADERS = $(wildcard $(SRCDIR)/*.h)
 # Main source files (excluding test files)
 MAIN_SOURCES = $(filter-out $(SRCDIR)/test_%.cpp, $(SOURCES))
 MAIN_OBJECTS = $(MAIN_SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+MAIN_OBJECTS += $(OBJDIR)/local_search.o
 
 # Test source files
 TEST_SOURCES = $(filter $(SRCDIR)/test_%.cpp, $(SOURCES))

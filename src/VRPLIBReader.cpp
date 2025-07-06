@@ -104,6 +104,7 @@ void VRPLIBReader::computeDistanceMatrix() {
     }
 }
 
+
 // --- Getter Implementations ---
 
 const std::string& VRPLIBReader::getName() const { return name; }
@@ -114,3 +115,16 @@ const std::vector<Node>& VRPLIBReader::getNodes() const { return nodes; }
 const std::vector<int>& VRPLIBReader::getDemands() const { return demands; }
 int VRPLIBReader::getDepotId() const { return depotId; }
 const std::vector<std::vector<double>>& VRPLIBReader::getDistanceMatrix() const { return distanceMatrix; }
+
+void VRPLIBReader::setDistanceMatrix(const std::vector<std::vector<double>>& dist) {
+    this->distanceMatrix = dist;
+    this->dimension = dist.size();
+}
+
+void VRPLIBReader::setDemands(const std::vector<int>& d) {
+    this->demands = d;
+}
+
+void VRPLIBReader::setCapacity(int q) {
+    this->capacity = q;
+}

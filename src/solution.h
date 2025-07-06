@@ -24,8 +24,8 @@ public:
     // Agrega una ruta
     void agregarRuta(const Ruta& ruta);
 
-    // Calcula el costo total de toda la solución
-    double calcularCostoTotal() const;
+    // Para los operadores de busqueda local
+    void actualizarCostoTotal();
 
     // Cantidad de vehículos usados
     int cantidadRutas() const;
@@ -35,11 +35,12 @@ public:
 
     // Acceso directo a las rutas
     const std::vector<Ruta>& getRutas() const;
+    std::vector<Ruta>& getRutas();
 
     // Eliminar una ruta
     void eliminarRuta(const Ruta& ruta);
 
-    // Setters para valores para soluciones ya dadas
+    // Setters para valores para soluciones ya dadas (solo para los tests)
     void setCostoTotal(double costo) { costo_total = costo; }
     void setNumRutas(int num) { num_rutas = num; }
     void setDepot(int d) { depot = d; }
@@ -49,6 +50,8 @@ public:
     double getDemandaTotal() const { return demanda_total; }
     int getNumRutas() const { return num_rutas; }
     int getDepot() const { return depot; }
+
+    
 
 private:
     int num_rutas; // RUTAS

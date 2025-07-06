@@ -8,12 +8,12 @@ void Solution::agregarRuta(const Ruta& ruta) {
     num_rutas++;
 }
 
-double Solution::calcularCostoTotal() const {
-    return costo_total;
-}
-
 int Solution::cantidadRutas() const {
     return rutas.size();
+}
+
+std::vector<Ruta>& Solution::getRutas() {
+    return rutas;
 }
 
 const std::vector<Ruta>& Solution::getRutas() const {
@@ -29,7 +29,7 @@ void Solution::imprimir() const {
         std::cout << "| Demanda: " << r.suma_demanda
                   << " | Costo: " << r.costo << std::endl;
     }
-    std::cout << "Costo total solución: " << calcularCostoTotal() << std::endl;
+    std::cout << "Costo total solución: " << getCostoTotal() << std::endl;
 }
 
 void Solution::eliminarRuta(const Ruta& ruta) {
@@ -42,5 +42,12 @@ void Solution::eliminarRuta(const Ruta& ruta) {
             rutas.erase(it);
             break;
         }
+    }
+}
+
+void Solution::actualizarCostoTotal() {
+    costo_total = 0.0;
+    for (const auto& ruta : rutas) {
+        costo_total += ruta.costo;
     }
 }

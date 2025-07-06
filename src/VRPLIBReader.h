@@ -13,6 +13,8 @@ struct Node {
 
 class VRPLIBReader {
 public:
+    VRPLIBReader() = default; // Constructor por defecto para tests
+
     // Constructor that takes the path to the VRPLIB file
     explicit VRPLIBReader(const std::string& filePath);
 
@@ -26,6 +28,12 @@ public:
     const std::vector<int>& getDemands() const;
     int getDepotId() const;
     const std::vector<std::vector<double>>& getDistanceMatrix() const;
+
+    // Metodos para pruebas
+    void setDistanceMatrix(const std::vector<std::vector<double>>& dist);
+    void setDemands(const std::vector<int>& d);
+    void setCapacity(int q);
+
 
 private:
     // --- Member variables to store instance data ---

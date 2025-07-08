@@ -35,7 +35,9 @@
 
 \section{Introducción}
 
-El Problema de Ruteo de Vehículos con Capacidad (CVRP) es un problema de optimización combinatoria que busca determinar las rutas óptimas para una flota de vehículos de capacidad limitada para servir a un conjunto de clientes desde un depósito central, minimizando el costo total (generalmente la distancia).
+El Problema de Ruteo de Vehículos con Capacidad (CVRP, por sus siglas en inglés) es un problema clásico de optimización combinatoria con aplicaciones directas en logística, distribución y transporte. El objetivo principal es diseñar rutas para una flota de vehículos idénticos, cada uno con una capacidad limitada, que deben atender a un conjunto de clientes dispersos geográficamente, partiendo y regresando a un depósito central. Cada cliente tiene una demanda conocida y debe ser atendido exactamente una vez, sin exceder la capacidad de los vehículos.
+
+El CVRP es un problema NP-hard, lo que implica que no existen algoritmos exactos eficientes para resolver instancias de gran tamaño en tiempo razonable. Por esta razón, se recurre a heurísticas y metaheurísticas que permiten obtener soluciones de buena calidad en tiempos computacionales aceptables. En este trabajo, se exploran e implementan diferentes enfoques heurísticos para abordar el CVRP, analizando su desempeño y las características de las soluciones obtenidas.
 
 \subsection{Definición Formal}
 Dado un grafo $G=(V,E)$, donde $V=\{0, ..., n\}$ es el conjunto de nodos (0 es el depósito) y $E$ es el conjunto de aristas. Cada cliente $i \in V \setminus \{0\}$ tiene una demanda $q_i$, y la distancia entre nodos $i$ y $j$ es $d_{ij}$. El objetivo es encontrar un conjunto de rutas de mínimo costo total para una flota de vehículos de capacidad $Q$, tal que cada cliente sea visitado exactamente una vez.
@@ -64,40 +66,83 @@ Nuestra implementación evalúa una lista restringida de los 5 candidatos más c
 \subsubsection{Análisis de Complejidad}
 En cada paso de la construcción de una ruta, se busca el vecino más cercano entre los nodos no visitados. En el peor caso, esto se repite para cada uno de los $n$ nodos, resultando en una complejidad de $O(n^2)$.
 
-\section{Operadores de Búsqueda Local (Pendiente)}
-\textit{En esta sección se describirán los operadores de búsqueda local implementados para mejorar las soluciones obtenidas por las heurísticas constructivas.}
+\section{Operadores de Búsqueda Local}
+\subsection{Descripción de los Operadores}
 
-\subsection{Operador de Reubicación (Relocation) (Pendiente)}
-\textit{Descripción del operador que mueve un cliente de una ruta a otra.}
+Con el objetivo de mejorar las soluciones iniciales generadas por las heurísticas constructivas, implementamos operadores de búsqueda local clásicos, específicamente los operadores de reubicación (relocate) e intercambio (swap).
 
-\subsection{Operador de Intercambio (Swap) (Pendiente)}
-\textit{Descripción del operador que intercambia dos clientes entre rutas (o en la misma ruta).}
+El operador de \textbf{relocate} consiste en seleccionar un cliente de una ruta y moverlo a otra posición, ya sea dentro de la misma ruta o en una ruta diferente, siempre que se respete la restricción de capacidad de los vehículos. En nuestra implementación, se exploran todas las posibles reubicaciones y se aplica la primera que produce una mejora en el costo total de la solución. Este proceso se repite de manera iterativa hasta que no se encuentran más movimientos beneficiosos.
 
-\section{Métodos Híbridos (Pendiente)}
-\textit{En esta sección se propondrá y describirá un método que combine una heurística constructiva con los operadores de búsqueda local para refinar las soluciones iniciales.}
+Por otro lado, el operador de \textbf{swap} selecciona dos clientes, que pueden pertenecer a rutas distintas o a la misma ruta, y los intercambia de lugar. Antes de realizar el intercambio, se verifica que las demandas resultantes en ambas rutas no superen la capacidad máxima permitida. Si el intercambio resulta en una reducción del costo total, se realiza el cambio y se actualizan las rutas afectadas.
 
-\section{Diseño e Implementación}
+Ambos operadores se aplican de forma alternada y repetida, permitiendo así refinar progresivamente la solución inicial. Esta estrategia de búsqueda local nos permitió obtener soluciones de mejor calidad, acercándonos más a los óptimos de referencia y superando las limitaciones de las heurísticas constructivas puras. La implementación se diseñó para ser eficiente, priorizando la rapidez en la evaluación de movimientos y la actualización de las rutas tras cada modificación.
 
-\subsection{Lenguaje y Estructura}
-El proyecto fue implementado en C++11, favoreciendo la eficiencia en el manejo de memoria y el rendimiento computacional. Se utilizó un diseño orientado a objetos para modularizar el código y facilitar su mantenimiento.
+\textbf{Impacto en los resultados:} La incorporación de estos operadores de búsqueda local tuvo un efecto significativo en la calidad de las soluciones obtenidas. En la mayoría de los casos, se logró reducir el costo total de las rutas y, en ocasiones, disminuir la cantidad de vehículos necesarios. Esto demuestra la importancia de complementar las heurísticas constructivas con técnicas de mejora local para abordar problemas complejos como el CVRP.
+
+\subsubsection{Análisis de Complejidad}
+El costo computacional de los operadores de búsqueda local depende principalmente del número de rutas ($R$) y del número máximo de clientes por ruta ($N$). 
+
+\begin{itemize}
+    \item \textbf{Relocate:} La complejidad por iteración es $O(R^2 N^2)$, ya que para cada par de rutas se consideran todas las posiciones posibles para mover un cliente de una ruta a otra.
+    \item \textbf{Swap:} La complejidad por iteración también es $O(R^2 N^2)$, dado que se evalúan todos los pares posibles de clientes entre todas las rutas.
+\end{itemize}
+
+En la práctica, si las rutas están balanceadas, el número de clientes por ruta suele ser aproximadamente $N \approx n/R$, donde $n$ es el número total de clientes. Sin embargo, la cota teórica general sigue siendo $O(R^2 N^2)$. Además, como la implementación detiene la búsqueda al encontrar la primera mejora, el tiempo promedio de ejecución suele ser menor que el peor caso, aunque para instancias grandes el costo computacional puede seguir siendo significativo si se buscan mejoras exhaustivas en cada iteración.
+
+\section{Métodos Híbridos}
+
+Para la generación de soluciones iniciales, se implementó un método que combina una heurística constructiva clásica con una fase de mejora local básica. En particular, utilizamos el algoritmo de \textbf{Clarke \& Wright} para construir una primera solución factible, aprovechando su eficiencia y capacidad para generar rutas de buena calidad en poco tiempo.
+
+Una vez obtenida la solución inicial, se aplica de manera iterativa el operador de  \textbf{relocate} como técnica de búsqueda local. Este proceso consiste en intentar mover clientes entre rutas para reducir el costo total, repitiendo la operación hasta que no se logran más mejoras o se alcanza un número máximo de iteraciones. De esta forma, se refina la solución constructiva y se incrementa la calidad de los resultados obtenidos.
+
+Decidimos esta estrategia híbrida porque nos permite partir de una solución razonable y mejorarla rápidamente, combinando la rapidez de las heurísticas constructivas con la capacidad de ajuste fino de la búsqueda local. En la práctica, observamos que este enfoque logra soluciones competitivas en tiempos computacionales reducidos.
+\subsubsection{Análisis de Complejidad}
+    \begin{itemize}
+        \item \textbf{Clarke \& Wright:} La complejidad es $O(n^2 \log n)$, ya que se calcula la matriz de ahorros y se ordenan los ahorros.
+        \item \textbf{Relocate:} La complejidad es $O(R^2 N^2)$, ya que se evalúan todas las posiciones posibles para mover un cliente de una ruta a otra.
+    \end{itemize}
+    Complejidad total: $O(n^2 \log n + R^2 N^2)$ (Clarke \& Wright + Relocate)
+
+\section{Consideraciones de Implementación y Dificultades Encontradas}
+
+El proyecto fue desarrollado en C++11, priorizando la eficiencia en el manejo de memoria y el rendimiento computacional.
+
+Una de las principales dificultades encontradas fue el procesamiento y parsing de las instancias en formato VRPLIB, que requirió el desarrollo de una clase específica para la lectura robusta de los datos. Además, la validación de las restricciones de capacidad y la correcta construcción de las rutas demandó una cuidadosa gestión de las estructuras de datos, especialmente al fusionar rutas o al seleccionar el siguiente cliente en las heurísticas.
+
+Otra dificultad relevante fue la depuración y validación de los resultados obtenidos, ya que fue necesario comparar las soluciones generadas con resultados de referencia y analizar casos particulares donde las heurísticas no lograban cumplir todas las restricciones. Finalmente, se optimizaron ciertas operaciones críticas, como la búsqueda de vecinos más cercanos y la actualización de rutas, para reducir el tiempo de ejecución en instancias de mayor tamaño.
 
 \subsection{Clases Principales}
-\begin{itemize}
-    \item \textbf{VRPLIBReader}: Responsable de leer y parsear las instancias desde archivos de formato VRPLIB.
-    \item \textbf{Solution}: Modela una solución al problema, conteniendo el conjunto de rutas y sus métricas (costo, etc.).
-    \item \textbf{ClarkeWrightSolver} y \textbf{NearestNeighborSolver}: Implementan las lógicas de las heurísticas constructivas.
-\end{itemize}
+A continuación se describen las clases principales desarrolladas en el proyecto:
 
-\subsection{Casos de Test (Pendiente)}
-\textit{En esta sección se documentarán los casos de test unitarios implementados para al menos dos clases, justificando las pruebas realizadas. Se pueden utilizar herramientas de IA para el diseño de los tests.}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Clase} & \textbf{Descripción} \\
+\hline
+VRPLIBReader & Responsable de leer y parsear las instancias desde archivos de formato VRPLIB, almacenando los datos relevantes como nodos, demandas, capacidades y la matriz de distancias. \\
+\hline
+Solution y Ruta & Modelan una solución al problema y las rutas individuales, permitiendo almacenar y manipular la secuencia de clientes, demandas, costos y otras métricas asociadas. \\
+\hline
+ClarkeWrightSolver & Implementa la heurística constructiva de ahorros de Clarke \& Wright, generando soluciones iniciales eficientes a partir de los datos de la instancia. \\
+\hline
+LocalSearch & Contiene la implementación de los operadores de búsqueda local, como reubicación (relocate) e intercambio (swap), para mejorar soluciones existentes. \\
+\hline
+GRASP & Implementa el metaheurístico GRASP (Greedy Randomized Adaptive Search Procedure), que construye soluciones de manera aleatorizada y aplica búsqueda local intensiva para refinar los resultados. \\
+\hline
+initial\_methods & Función que combina la heurística de Clarke \& Wright con búsqueda local, utilizada para generar soluciones iniciales de buena calidad de forma eficiente. \\
+\hline
+\end{tabular}
+\caption{Clases principales desarrolladas en el proyecto y su función.}
+\end{table}
+
+\subsection{Casos de Test}
+Utilizamos ChatGPT para generar los tests unitarios para la clase \textbf{Solution} y \textbf{LocalSearch}. La idea principal de los tests para Solution es utilizarla para asegurarnos que las soluciones generadas sean correctas para compararlas con las construidas, y que los operadores de búsqueda local funcionen correctamente.
+
 
 \section{Experimentación y Resultados}
-
-\subsection{Diseño Experimental}
-\begin{itemize}
-    \item \textbf{Instancias:} Se utilizan las instancias de benchmark del directorio `2l-cvrp-0` de VRPLIB.
-    \item \textbf{Métricas:} Se evalúan las soluciones según el costo total (distancia) y el número de vehículos (rutas). También se considera el tiempo de ejecución.
-\end{itemize}
+Para la experimentación registramos los tiempos de ejecución de cada método para cada instancia en un archivo .txt, con su respectivo costo final para el problema, y el error relativo de la solucion encontrada con la solucion de referencia.Consideramos así, solo instancias que cuentan con soluciones óptimas de referencia.
+Para cada instancia se ejecutaron 10 veces cada método y se registró el tiempo promedio de ejecución.
 
 \subsection{Plan de Comparación de Métodos}
 La experimentación comparará el rendimiento de (al menos) los siguientes enfoques:

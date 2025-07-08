@@ -7,6 +7,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor} %
 \geometry{margin=1in}
 
 
@@ -110,7 +112,46 @@ El proyecto fue desarrollado en C++11, priorizando la eficiencia en el manejo de
 Una de las principales dificultades encontradas fue el procesamiento y parsing de las instancias en formato VRPLIB, que requirió el desarrollo de una clase específica para la lectura robusta de los datos. Además, la validación de las restricciones de capacidad y la correcta construcción de las rutas demandó una cuidadosa gestión de las estructuras de datos, especialmente al fusionar rutas o al seleccionar el siguiente cliente en las heurísticas.
 
 Otra dificultad relevante fue la depuración y validación de los resultados obtenidos, ya que fue necesario comparar las soluciones generadas con resultados de referencia y analizar casos particulares donde las heurísticas no lograban cumplir todas las restricciones. Finalmente, se optimizaron ciertas operaciones críticas, como la búsqueda de vecinos más cercanos y la actualización de rutas, para reducir el tiempo de ejecución en instancias de mayor tamaño.
+\section{Comandos para compilar y ejecutar el proyecto}
+\subsection{Usando make}
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, keywordstyle=\color{blue}]
+    # Compilar el proyecto
+    make
+    
+    # Limpiar archivos compilados
+    make clean
+\end{lstlisting}
 
+\subsection{Ejecutando el proyecto}
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, keywordstyle=\color{blue}]
+    ./bin/cvrp_solver.exe <instancia>
+\end{lstlisting}
+
+Luego de la ejecución, se dispondrá un menú con las siguientes opciones:
+\begin{itemize}
+    \item \textbf{1:} Ejecutar el algoritmo de Clarke \& Wright.
+    \item \textbf{2:} Ejecutar el algoritmo de Nearest Neighbor.
+    \item \textbf{3:} Ejecutar el algoritmo de GRASP.
+\end{itemize}
+
+Si se selecciona alguna de las primeras dos opciones, se dispondrá nuevamente otro menú con las siguientes opciones:
+\begin{itemize}
+        \item \textbf{0:} No aplicar búsqueda local
+        \item \textbf{1:} Aplicar operador Relocate
+        \item \textbf{2:} Aplicar operador Swap  
+        \item \textbf{3:} Aplicar ambos operadores (Relocate + Swap)
+\end{itemize}
+
+\subsubsection{Ejemplos de ejecución}
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, keywordstyle=\color{blue}]
+    ./bin/cvrp_solver.exe instances/E045-04f.vrp
+\end{lstlisting}
+
+\subsection{Ejecutando los tests}
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, keywordstyle=\color{blue}]
+    ./bin/test_local_search.exe  (o ./bin/test_solution_reader.exe)
+\end{lstlisting}
+\newpage
 \subsection{Clases Principales}
 A continuación se describen las clases principales desarrolladas en el proyecto:
 
@@ -137,12 +178,10 @@ initial\_methods & Función que combina la heurística de Clarke \& Wright con b
 \end{table}
 
 \subsection{Casos de Test}
-Utilizamos ChatGPT para generar los tests unitarios para la clase \textbf{Solution} y \textbf{LocalSearch}. La idea principal de los tests para Solution es utilizarla para asegurarnos que las soluciones generadas sean correctas para compararlas con las construidas, y que los operadores de búsqueda local funcionen correctamente.
-
+Utilizamos ChatGPT para generar los tests unitarios para la clase \textbf{Solution} y \textbf{LocalSearch}. La idea principal de los tests para Solution es utilizarla para facilitar la comparación entre soluciones generadas y las soluciones dadas.
+Además, dispusimos de la IA para que, durante la experimentación, se registren los tiempos, costos y métodos de ejecución de cada instancia en un archivo .txt para luego facilitar el análisis de los resultados.
 
 \section{Experimentación y Resultados}
-Para la experimentación registramos los tiempos de ejecución de cada método para cada instancia en un archivo .txt, con su respectivo costo final para el problema, y el error relativo de la solucion encontrada con la solucion de referencia.Consideramos así, solo instancias que cuentan con soluciones óptimas de referencia.
-Para cada instancia se ejecutaron 10 veces cada método y se registró el tiempo promedio de ejecución.
 
 \subsection{Plan de Comparación de Métodos}
 La experimentación comparará el rendimiento de (al menos) los siguientes enfoques:

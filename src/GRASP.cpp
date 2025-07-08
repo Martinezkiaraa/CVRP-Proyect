@@ -17,14 +17,14 @@ Solution GRASP::ejecutarGRASP(const VRPLIBReader& reader, int rcl_size) {
     bool mejora = true;
     int iteraciones = 0;
     const int max_iteraciones = reader.getDimension();
-    
-    while (mejora && iteraciones < max_iteraciones) {
-        bool mejora_relocate = LocalSearch::relocate(solucion, reader);
-        bool mejora_swap = LocalSearch::swap(solucion, reader);
-        mejora = mejora_relocate || mejora_swap;
-        iteraciones++;
+    for (int i=0 ; i< reader.getDimension(); i++){
+        while (mejora && iteraciones < max_iteraciones) {
+            bool mejora_relocate = LocalSearch::relocate(solucion, reader);
+            bool mejora_swap = LocalSearch::swap(solucion, reader);
+            mejora = mejora_relocate || mejora_swap;
+            iteraciones++;
+        }
     }
-    
     std::cout << "Búsqueda local completada en " << iteraciones << " iteraciones" << std::endl;
     
     return solucion;
@@ -92,6 +92,9 @@ Solution GRASP::construirSolucionAleatorizada(const VRPLIBReader& reader, int rc
             ruta_actual.suma_demanda += demands[candidato_seleccionado];
             ruta_actual.costo += distanceMatrix[nodo_anterior][candidato_seleccionado];
             visitados[candidato_seleccionado] = true;
+            if(ruta_actual.suma_demanda >= capacidad){
+                ruta_completada = true;
+            }
         }
         
         // Cerrar la ruta (volver al depósito)

@@ -179,40 +179,41 @@ int main(int argc, char* argv[]) {
             
             sol = GRASP::ejecutarGRASP(reader, rcl_size);
             
+            
         }
 
-        // Elegir búsqueda local
-        std::cout << "\n¿Desea aplicar busqueda local?" << std::endl;
-        std::cout << "0) No aplicar" << std::endl;
-        std::cout << "1) Relocate" << std::endl;
-        std::cout << "2) Swap" << std::endl;
-        std::cout << "3) Ambas (Relocate + Swap)" << std::endl;
-        int opcion_bl = -1;
-        while (opcion_bl < 0 || opcion_bl > 3) {
-            std::cout << "Opcion (0/1/2/3): ";
-            std::cin >> opcion_bl;
-        }
-
-        bool mejora = true;
-        int iter = 0;
-        const int max_iter = 200;
-        if (opcion_bl == 1) {
-            // Relocate
-            while (mejora && iter < max_iter) {
-                mejora = LocalSearch::relocate(sol, reader);
-                iter++;
+        if(heuristica!=4){// Elegir búsqueda local
+            std::cout << "\n¿Desea aplicar busqueda local?" << std::endl;
+            std::cout << "0) No aplicar" << std::endl;
+            std::cout << "1) Relocate" << std::endl;
+            std::cout << "2) Swap" << std::endl;
+            std::cout << "3) Ambas (Relocate + Swap)" << std::endl;
+            int opcion_bl = -1;
+            while (opcion_bl < 0 || opcion_bl > 3) {
+                std::cout << "Opcion (0/1/2/3): ";
+                std::cin >> opcion_bl;
             }
-        } else if (opcion_bl == 2) {
-            // Swap
-            while (mejora && iter < max_iter) {
-                mejora = LocalSearch::swap(sol, reader);
-                iter++;
-            }
-        } else if (opcion_bl == 3) {
-            // mejorarSolucion() aplica relocate y swap alternadamente
-            LocalSearch::mejorarSolucion(sol, reader, max_iter);
-        }
 
+            bool mejora = true;
+            int iter = 0;
+            const int max_iter = 200;
+            if (opcion_bl == 1) {
+                // Relocate
+                while (mejora && iter < max_iter) {
+                    mejora = LocalSearch::relocate(sol, reader);
+                    iter++;
+                }
+            } else if (opcion_bl == 2) {
+                // Swap
+                while (mejora && iter < max_iter) {
+                    mejora = LocalSearch::swap(sol, reader);
+                    iter++;
+                }
+            } else if (opcion_bl == 3) {
+                // mejorarSolucion() aplica relocate y swap alternadamente
+                LocalSearch::mejorarSolucion(sol, reader, max_iter);
+            }
+        }    
         bool es_valida = validarSolucion(sol, reader);
             if (!es_valida) {
                 std::cout << "La solución no es válida.\n";

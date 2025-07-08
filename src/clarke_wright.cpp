@@ -107,7 +107,7 @@ Solution ClarkeWrightSolver::construirSolucion() {
     // Initialize data structures
     rutas.clear();
     node_to_route.clear();
-    std::vector<bool> visitados(n, false);
+    std::vector<bool> visitados(n + 1, false);
     visitados[depot] = true;
 
     // Calculate savings
@@ -141,7 +141,7 @@ Solution ClarkeWrightSolver::construirSolucion() {
     }
 
     // Add trivial routes for unvisited clients
-    for (int cliente = 1; cliente < n; ++cliente) {
+    for (int cliente = 1; cliente <= n; ++cliente) {
         if (!visitados[cliente]) {
             agregarRutaTrivial(cliente, depot);
         }
@@ -152,6 +152,9 @@ Solution ClarkeWrightSolver::construirSolucion() {
     for (const auto& ruta : rutas) {
         solucion.agregarRuta(ruta);
     }
+    
+    const auto& dist = reader.getDistanceMatrix();
+    solucion.actualizarCostoTotal(dist);
 
     return solucion;
 }

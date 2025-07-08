@@ -45,9 +45,23 @@ void Solution::eliminarRuta(const Ruta& ruta) {
     }
 }
 
-void Solution::actualizarCostoTotal() {
+void Solution::actualizarCostoTotal(const std::vector<std::vector<double>>& distancia) {
+    recalcularCostosRutas(distancia);
     costo_total = 0.0;
     for (const auto& ruta : rutas) {
         costo_total += ruta.costo;
+    }
+}
+
+
+void Solution::recalcularCostosRutas(const std::vector<std::vector<double>>& distancia) {
+    for (auto& ruta : rutas) {
+        double costo = 0.0;
+        for (size_t i = 1; i < ruta.secuencia.size(); ++i) {
+            int desde = ruta.secuencia[i - 1];
+            int hasta = ruta.secuencia[i];
+            costo += distancia[desde][hasta];
+        }
+        ruta.costo = costo;
     }
 }

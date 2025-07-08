@@ -114,5 +114,7 @@ Solution NearestNeighborSolver::construirSolucion() {
         sol.agregarRuta(ruta_actual);
     }
 
+    sol.actualizarCostoTotal(dist);
+
     return sol;
 }

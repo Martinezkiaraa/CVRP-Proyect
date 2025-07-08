@@ -154,10 +154,19 @@ Ruta SolutionReader::parseRouteLine(const std::string& line) {
     iss >> ruta.longitud;     // LENGTH
     iss >> ruta.num_clientes; // #C
     
-    // Leer la secuencia de nodos
+    // Leer la secuencia de nodos y aplicar mapeo de índices
+    // En .HRE: nodo 1 = primer cliente, nodo 101 = depósito
+    // En .dat:  nodo 1 = depósito, nodo 2 = primer cliente
     int nodo;
     while (iss >> nodo) {
-        ruta.secuencia.push_back(nodo);
+        // Mapeo: HRE -> DAT
+        // Si es el depósito (nodo 101 en HRE), mapear a nodo 1 en DAT
+        if (nodo == 101) {
+            ruta.secuencia.push_back(1); // Depósito
+        } else {
+            // Clientes: HRE nodo N -> DAT nodo N+1
+            ruta.secuencia.push_back(nodo + 1);
+        }
     }
     
     return ruta;

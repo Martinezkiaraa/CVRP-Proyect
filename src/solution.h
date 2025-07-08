@@ -25,7 +25,8 @@ public:
     void agregarRuta(const Ruta& ruta);
 
     // Para los operadores de busqueda local
-    void actualizarCostoTotal();
+    void actualizarCostoTotal(const std::vector<std::vector<double>>& distancia);
+    void recalcularCostosRutas(const std::vector<std::vector<double>>& distancia);
 
     // Cantidad de vehículos usados
     int cantidadRutas() const;

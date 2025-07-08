@@ -68,6 +68,73 @@ void imprimirSolucion(const Solution& sol) {
     }
 }
 
+#include <iostream>
+#include "solution.h"
+#include "VRPLIBReader.h"
+
+bool validarSolucion(const Solution& sol, const VRPLIBReader& reader) {
+    int n = reader.getDimension();
+    int depot = reader.getDepotId(); // ej: 1
+    int capacidad = reader.getCapacity();
+    const std::vector<int>& demandas = reader.getDemands();
+
+    // Vector para marcar visitados, índices de 1 a n, ignoramos índice 0
+    std::vector<bool> visitados(n + 1, false);
+
+    // Marcar depósito como visitado (no es cliente)
+    visitados[depot] = true;
+
+    for (const auto& ruta : sol.getRutas()) {
+        // Validar que la ruta no esté vacía y empieza/termina en depósito
+        if (ruta.secuencia.empty() || ruta.secuencia.front() != depot || ruta.secuencia.back() != depot) {
+            std::cout << "[ERROR] Ruta " << ruta.id << " no comienza o termina en depósito.\n";
+            return false;
+        }
+
+        int demanda_acumulada = 0;
+
+        for (size_t i = 1; i < ruta.secuencia.size() - 1; ++i) {
+            int nodo = ruta.secuencia[i];
+
+            // Validar nodo válido
+            if (nodo < 1 || nodo > n) {
+                std::cout << "[ERROR] Nodo inválido " << nodo << " en ruta " << ruta.id << ".\n";
+                return false;
+            }
+
+            // Validar no repetido
+            if (visitados[nodo]) {
+                std::cout << "[ERROR] Nodo " << nodo << " visitado más de una vez.\n";
+                return false;
+            }
+            visitados[nodo] = true;
+
+            // Acumular demanda
+            demanda_acumulada += demandas[nodo];
+        }
+
+        // Validar capacidad no excedida
+        if (demanda_acumulada > capacidad) {
+            std::cout << "[ERROR] Ruta " << ruta.id << " supera capacidad. Demanda: " 
+                      << demanda_acumulada << " > Capacidad: " << capacidad << "\n";
+            return false;
+        }
+    }
+
+    // Verificar que todos los clientes hayan sido visitados (todos excepto depósito)
+    for (int nodo = 1; nodo <= n; ++nodo) {
+        if (!visitados[nodo]) {
+            std::cout << "[ERROR] Cliente " << nodo << " no fue visitado.\n";
+            return false;
+        }
+    }
+
+    std::cout << "Solución válida: todas las restricciones se cumplen.\n";
+    return true;
+}
+
+
+
 int main(int argc, char* argv[]) {
 
     if (argc < 2) {
@@ -111,6 +178,7 @@ int main(int argc, char* argv[]) {
             if (rcl_size > 10) rcl_size = 10;
             
             sol = GRASP::ejecutarGRASP(reader, rcl_size);
+            
         }
 
         // Elegir búsqueda local
@@ -144,6 +212,11 @@ int main(int argc, char* argv[]) {
             // mejorarSolucion() aplica relocate y swap alternadamente
             LocalSearch::mejorarSolucion(sol, reader, max_iter);
         }
+
+        bool es_valida = validarSolucion(sol, reader);
+            if (!es_valida) {
+                std::cout << "La solución no es válida.\n";
+            }
 
         std::cout << "=== Solucion encontrada ===" << std::endl; 
         imprimirSolucion(sol);

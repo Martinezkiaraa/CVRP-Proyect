@@ -1,0 +1,17 @@
+instancia,metodo,costo,rutas,mejora_vs_optimo
+E045-04f,Clarke & Wright,834.344299,5,+15.3%
+E045-04f,Clarke & Wright + Relocate,789.443772,5,+9.10%
+E045-04f,Clarke & Wright + Swap,798.776076,5,+10.3%
+E045-04f,Clarke & Wright + Híbrido,789.443772,5,+9.10%
+E045-04f,Nearest Neighbor,1075.327093,4,+48.6%
+E045-04f,Nearest Neighbor + Relocate,800.757192,4,+10.6%
+E045-04f,Nearest Neighbor + Swap,1016.986069,4,+40.5%
+E045-04f,Nearest Neighbor + Híbrido,800.757192,4,+10.6%
+E076-08u,Clarke & Wright,749.105599,8,+0.87%
+E076-08u,Clarke & Wright + Relocate,525.048898,8,-29.%
+E076-08u,Clarke & Wright + Swap,659.283213,8,-11.%
+E076-08u,Clarke & Wright + Híbrido,506.204007,8,-31.%
+E076-08u,Nearest Neighbor,973.245316,8,+31.0%
+E076-08u,Nearest Neighbor + Relocate,869.250410,8,+17.0%
+E076-08u,Nearest Neighbor + Swap,908.784189,8,+22.3%
+E076-08u,Nearest Neighbor + Híbrido,845.963966,8,+13.9%
